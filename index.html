@@ -3,57 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Finder – Trova il tuo Volo</title>
-    <link rel="stylesheet" href="style.css">
+    <title>SafeTravel – Smart Travel Planning</title>
+    <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
 
-    <header>
-        <h1>Flight Finder</h1>
-        <p>Trova velocemente i voli migliori per le tue destinazioni</p>
+    <!-- HEADER -->
+    <header class="navbar">
+        <div class="navbar-left">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." class="logo">
+            <h1>SafeTravel</h1>
+        </div>
     </header>
 
+    <!-- HERO -->
     <section class="hero">
-        <h2>Inizia la tua ricerca voli</h2>
-        <form id="flight-form">
-            <div class="field">
-                <label>Da</label>
-                <input type="text" id="from" placeholder="Milano (MXP)">
-            </div>
+        <h2>Pianifica un viaggio sicuro, intelligente e personalizzato</h2>
+        <p>Il tuo assistente che combina sicurezza, semplicità e analisi intelligente.</p>
+    </section>
 
-            <div class="field">
-                <label>A</label>
-                <input type="text" id="to" placeholder="New York (JFK)">
-            </div>
+    <!-- FORM -->
+    <section class="form-section">
+        <h3>Trip Details</h3>
+        <form id="tripForm">
 
-            <div class="field">
-                <label>Data</label>
-                <input type="date" id="date">
-            </div>
+            <label>Destinazione</label>
+            <input type="text" id="destination" placeholder="Es. Tokyo">
 
-            <button type="button" onclick="searchFlights()">Cerca Voli</button>
+            <label>Date</label>
+            <input type="text" id="dates" placeholder="12–19 Aprile 2025">
+
+            <label>Budget</label>
+            <input type="number" id="budget" placeholder="Es. 1500">
+
+            <label>Preferenze</label>
+            <input type="text" id="preferences" placeholder="Food, Culture, Shopping">
+
+            <button type="button" onclick="generateSummary()">Genera Viaggio</button>
+
         </form>
     </section>
 
-    <section class="results">
-        <h2>Risultati della ricerca</h2>
-        <table id="results-table">
-            <thead>
-                <tr>
-                    <th>Compagnia</th>
-                    <th>Partenza</th>
-                    <th>Arrivo</th>
-                    <th>Prezzo</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- I voli verranno inseriti qui -->
-            </tbody>
-        </table>
+    <!-- SUMMARY RESULT -->
+    <section class="summary-section" id="summarySection" style="display:none;">
+        <h3>Smart Trip Summary</h3>
+        <div id="summaryBox" class="summary-box"></div>
     </section>
 
-    <script src="script.js"></script>
+    <!-- SAFE SCORE -->
+    <section class="safe-score">
+        <h3>SAFE Score</h3>
+        <p class="safe-value">8.7 / 10</p>
+        <small>Based on weather safety, political stability, alerts and health indicators.</small>
+    </section>
 
+    <!-- FLIGHT RECOMMENDATION -->
+    <section class="flights">
+        <h3>Flight Recommendation</h3>
+        <div class="flight-box">
+            <p><strong>Airline:</strong> SafeAir</p>
+            <p><strong>Price:</strong> €529</p>
+            <p><strong>Duration:</strong> 11h 20m</p>
+            <button class="flight-btn">Book Now</button>
+        </div>
+    </section>
+
+    <script src="scripts/app.js"></script>
 </body>
 </html>
-
