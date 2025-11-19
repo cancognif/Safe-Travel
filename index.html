@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Finder – Trova il tuo Volo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Flight Finder</h1>
+        <p>Trova velocemente i voli migliori per le tue destinazioni</p>
+    </header>
+
+    <section class="hero">
+        <h2>Inizia la tua ricerca voli</h2>
+        <form id="flight-form">
+            <div class="field">
+                <label>Da</label>
+                <input type="text" id="from" placeholder="Milano (MXP)">
+            </div>
+
+            <div class="field">
+                <label>A</label>
+                <input type="text" id="to" placeholder="New York (JFK)">
+            </div>
+
+            <div class="field">
+                <label>Data</label>
+                <input type="date" id="date">
+            </div>
+
+            <button type="button" onclick="searchFlights()">Cerca Voli</button>
+        </form>
+    </section>
+
+    <section class="results">
+        <h2>Risultati della ricerca</h2>
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>Compagnia</th>
+                    <th>Partenza</th>
+                    <th>Arrivo</th>
+                    <th>Prezzo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- I voli verranno inseriti qui -->
+            </tbody>
+        </table>
+    </section>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+
