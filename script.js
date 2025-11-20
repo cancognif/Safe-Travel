@@ -112,3 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
     el.classList.add('animate');
   });
 });
+
+// Mobile menu toggle
+document.getElementById("navToggle").addEventListener("click", () => {
+  document.querySelector(".nav-menu").classList.toggle("open");
+});
+
