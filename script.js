@@ -1,5 +1,5 @@
 /* -------------------------------------------------------
-       SAFE TRAVEL – SCRIPT COMPLETO FINALE
+       SAFE TRAVEL – SCRIPT COMPLETO FINALE (API REALI)
    ------------------------------------------------------- */
 
 
@@ -26,7 +26,7 @@ function showLoader() {
 
 
 /* -----------------------------
-   API METEO – OPEN METEO
+   API METEO – OPEN METEO (GRATIS)
 ----------------------------- */
 async function getRealWeather(lat, lon) {
   const url =
@@ -49,11 +49,11 @@ async function getRealWeather(lat, lon) {
 
 
 /* -----------------------------
-   API VOLI – TRAVELPAYOUTS
+   API VOLI – TRAVELPAYOUTS (REALI)
 ----------------------------- */
 
-// INSERISCI LA TUA KEY QUI
-const TRAVELPAYOUTS_TOKEN = "INSERISCI_LA_TUA_API_KEY";
+// ⭐ LA TUA API KEY:
+const TRAVELPAYOUTS_TOKEN = "02dd565a82ec75665c68543e34abc5d6";
 
 async function getFlightPrice(origin, destinationCode) {
   const url =
@@ -77,7 +77,7 @@ async function getFlightPrice(origin, destinationCode) {
 
 
 /* -------------------------------------------------------
-   DATABASE DESTINAZIONI – VERSIONE COMPLETA
+   DATABASE DESTINAZIONI – COMPLETO
 ------------------------------------------------------- */
 
 const destinationsData = [
@@ -133,7 +133,7 @@ const destinationsData = [
     budget: "high",
     lat: 46.6863,
     lon: 7.8632,
-    code: "BRN", 
+    code: "BRN",
     tagline: "Perfetta per natura, laghi e montagne.",
     flightTime: "1h 10m",
     suggestedFlights: `
@@ -148,7 +148,7 @@ const destinationsData = [
 
 
 /* -------------------------------------------------------
-   CREAZIONE CARD COMPLETA (API METEO + API VOLI)
+   CREAZIONE CARD CON DATI REALI
 ------------------------------------------------------- */
 
 async function createCardWithAPI(dest) {
@@ -193,21 +193,21 @@ document.getElementById("tripForm").addEventListener("submit", async function(ev
   showLoader();
 
   const area = document.getElementById("area").value;
-  const type = document.getElementById("type")?.value || "all";
+  const type = document.getElementById("type").value;
   const budget = document.getElementById("budget").value;
   const vibe = document.getElementById("vibe").value;
 
   const results = destinationsData.filter(dest => {
 
-    // AREA: Europa / mondo
+    // AREA: Europa / Mondo
     const matchArea =
       area === "world" || dest.area === area;
 
-    // TIPOLOGIA: mare, montagna, città
+    // TIPO: Mare / Montagna / Città
     const matchType =
       type === "all" || dest.type === type;
 
-    // VIBE: relax, romantic, adventure
+    // MOOD: Relax, Avventura, Cultura
     const matchVibe =
       vibe === "all" || dest.vibe === vibe;
 
@@ -226,7 +226,6 @@ document.getElementById("tripForm").addEventListener("submit", async function(ev
     return;
   }
 
-  // CREA CARD
   let html = "";
   for (const dest of results) {
     html += await createCardWithAPI(dest);
@@ -234,4 +233,5 @@ document.getElementById("tripForm").addEventListener("submit", async function(ev
 
   container.innerHTML = html;
 });
+
 
