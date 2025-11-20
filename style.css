@@ -474,4 +474,32 @@ select:focus {
     gap: 22px;
   }
 }
+/* HERO LOGO */
+.hero-logo-box {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hero-logo {
+  height: 120px;
+  width: auto;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
+}
+
+.hero-brand-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #2A3F73;
+  margin-bottom: 6px;
+}
+
+.hero-brand-subtitle {
+  font-size: 16px;
+  color: #4b566a;
+  margin-bottom: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
