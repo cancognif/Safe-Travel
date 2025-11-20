@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeTravel – Trova la meta perfetta (gratis)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="SafeTravel logo" class="logo">
+      <span class="brand">SafeTravel</span>
+    </div>
+    <div class="nav-right">
+      <span class="nav-tagline">Suggerimenti intelligenti. Nessuna prenotazione.</span>
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <h1 class="hero-title">
+      Hai voglia di viaggiare ma<br>
+      <span class="accent">non sai dove andare?</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      SafeTravel ti suggerisce GRATIS la destinazione perfetta in base ai tuoi desideri.<br>
+      <b>Non vendiamo pacchetti. Non siamo un motore prezzi. Non prendiamo commissioni.</b>
+    </p>
+
+
+    <!-- LAYOUT A DUE COLONNE -->
+    <div class="two-columns">
+
+      <!-- COLONNA SINISTRA (CONCEPT) -->
+      <section class="concept concept-top column-left">
+        <h2 class="concept-title">Perché SafeTravel è diverso da tutto ciò che conosci?</h2>
+
+        <div class="concept-grid">
+
+          <div class="concept-box">
+            <div class="icon">✨</div>
+            <h3>Nessuna prenotazione</h3>
+            <p>Non vendiamo nulla. I suggerimenti sono totalmente imparziali.</p>
+          </div>
+
+          <div class="concept-box">
+            <div class="icon">📊</div>
+            <h3>Consigli basati sui dati</h3>
+            <p>Meteo, periodo, sicurezza, budget e semplicità del viaggio.</p>
+          </div>
+
+          <div class="concept-box">
+            <div class="icon">💙</div>
+            <h3>Sempre gratis</h3>
+            <p>Il progetto cresce grazie alle visite, non dai pagamenti degli utenti.</p>
+          </div>
+
+          <div class="concept-box">
+            <div class="icon">🧭</div>
+            <h3>Perfetto per indecisi</h3>
+            <p>È pensato per chi vuole viaggiare ma non sa dove andare.</p>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- COLONNA DESTRA (FILTRI) -->
+      <section class="filters column-right">
+        <form id="tripForm" class="filters-card">
+
+          <p class="filters-title">Dimmi cosa cerchi → ti dico dove andare</p>
+
+          <div class="filters-row">
+            <div class="field">
+              <label>Area</label>
+              <select id="area">
+                <option value="world">Tutto il mondo</option>
+                <option value="europe">Europa</option>
+                <option value="sea">Mare</option>
+                <option value="mountain">Montagna</option>
+                <option value="city">Città</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Periodo</label>
+              <input type="text" id="period" placeholder="Es. primavera, estate, weekend lungo">
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <div class="field">
+              <label>Budget</label>
+              <select id="budget">
+                <option value="low">&lt; 300 €</option>
+                <option value="mid">300–700 €</option>
+                <option value="high">&gt; 700 €</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Persone</label>
+              <input type="number" id="people" value="2" min="1">
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <div class="field">
+              <label>Tipo viaggio</label>
+              <select id="vibe">
+                <option value="relax">Relax</option>
+                <option value="family">Family</option>
+                <option value="romantic">Romantico</option>
+                <option value="adventure">Avventura</option>
+                <option value="culture">Cultura e città</option>
+              </select>
+            </div>
+
+            <div class="field field-button">
+              <button class="btn-primary" type="submit">
+                Mostrami dove andare →
+              </button>
+            </div>
+          </div>
+
+          <p class="free-note">
+            Servizio totalmente gratuito. SafeTravel crescerà dal traffico, non da te.
+          </p>
+        </form>
+      </section>
+
+    </div> <!-- fine due colonne -->
+
+  </section>
+
+
+
+  <!-- RISULTATI -->
+  <section class="results" id="resultsSection">
+    <h2 class="section-title">Le migliori destinazioni per te</h2>
+    <p class="results-subtitle">Suggerimenti intelligenti, non offerte.</p>
+    <div class="cards" id="cardsContainer"></div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © SafeTravel — Idee di viaggio intelligenti e gratuite.
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
