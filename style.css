@@ -503,3 +503,22 @@ select:focus {
   margin-right: auto;
 }
 
+/* MIGLIORA SPAZIATURA TRA TESTI della HERO */
+.hero-intro-spacing {
+  margin-top: 25px;
+  margin-bottom: 40px;
+}
+
+/* LOGO + TITOLI ALLINEATI */
+.hero-logo-box {
+  margin-bottom: 45px;
+}
+
+.hero-brand-title {
+  margin-bottom: 4px;
+}
+
+.hero-title {
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
