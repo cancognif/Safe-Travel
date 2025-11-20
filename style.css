@@ -27,6 +27,11 @@ body {
   z-index: 100;
 }
 
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
 .logo {
   height: 48px;
 }
@@ -44,20 +49,15 @@ body {
 }
 
 .nav-menu a {
-  display: flex;
-  align-items: center;
-  gap: 4px;
   font-size: 14px;
   color: #2A3F73;
   text-decoration: none;
   font-weight: 600;
-  padding: 6px 0;
   transition: 0.2s ease;
 }
 
 .nav-menu a:hover {
   color: #4FA3D1;
-  transform: translateY(-2px);
 }
 
 .nav-toggle {
@@ -111,7 +111,7 @@ body {
   color: #4b566a;
 }
 
-/* TWO COLUMNS */
+/* TWO COLUMNS LAYOUT */
 .two-columns {
   display: grid;
   grid-template-columns: 1fr 400px;
@@ -129,18 +129,13 @@ body {
   top: 120px;
 }
 
-/* FILTER BOX */
+/* FILTER CARD */
 .filters-card {
   background: #ffffff;
   border-radius: 18px;
   padding: 24px;
   border-left: 5px solid #4FA3D1;
   box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-  transition: 0.25s;
-}
-
-.filters-card:hover {
-  transform: translateY(-3px);
 }
 
 .filters-main-title {
@@ -185,6 +180,14 @@ select {
   font-size: 14px;
 }
 
+input:focus,
+select:focus {
+  background: white;
+  border-color: #4FA3D1;
+  outline: none;
+}
+
+/* BUTTON */
 .btn-primary {
   width: 100%;
   padding: 12px;
@@ -201,13 +204,7 @@ select {
   transform: translateY(-2px);
 }
 
-.free-note {
-  font-size: 12px;
-  color: #6b7a95;
-  margin-top: 10px;
-}
-
-/* CONCEPT */
+/* CONCEPT RIGHT COLUMN */
 .concept-title {
   font-size: 24px;
   font-weight: 700;
@@ -239,6 +236,11 @@ select {
   color: #2A3F73;
 }
 
+.concept-box p {
+  font-size: 14px;
+  color: #4b566a;
+}
+
 /* RESULTS */
 .results {
   padding: 50px 6vw;
@@ -252,14 +254,15 @@ select {
 }
 
 .results-subtitle {
-  text-align: center;
+  font-size: 15px;
   color: #4b566a;
+  text-align: center;
   margin-bottom: 20px;
 }
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
 }
 
@@ -358,9 +361,14 @@ select {
 }
 
 /* MOBILE */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .two-columns {
     grid-template-columns: 1fr;
+  }
+
+  .column-right {
+    position: static;
+    margin-top: 40px;
   }
 
   .nav-menu {
@@ -370,13 +378,13 @@ select {
   .nav-menu.open {
     display: flex;
     flex-direction: column;
-    background: #fff;
     position: absolute;
-    top: 60px;
     right: 20px;
+    top: 60px;
+    background: #fff;
     padding: 20px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   }
 
   .nav-toggle {
