@@ -339,4 +339,53 @@ select:focus {
 @keyframes fadeInUp {
   to { opacity: 1; transform: translateY(0); }
 }
+/* NAV MENU */
+.nav-menu {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-menu a {
+  font-size: 14px;
+  color: #2A3F73;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 0;
+  transition: color 0.2s ease;
+}
+
+.nav-menu a:hover {
+  color: #4FA3D1;
+}
+
+/* MOBILE MENU */
+.nav-toggle {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px;
+    width: 180px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    border-radius: 12px;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+}
 
