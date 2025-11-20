@@ -28,13 +28,14 @@ body {
 }
 
 .logo {
-  height: 42px;
+  height: 48px;
 }
 
 .brand {
-  font-size: 20px;
+  font-size: 22px;
   color: #2A3F73;
-  font-weight: 600;
+  font-weight: 700;
+  margin-left: 10px;
 }
 
 .nav-tagline {
@@ -45,13 +46,15 @@ body {
 /* HERO SECTION */
 .hero {
   padding: 50px 6vw;
-  max-width: 900px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .hero-title {
-  font-size: 34px;
+  font-size: 36px;
   font-weight: 700;
   color: #1f2e40;
+  line-height: 1.25;
 }
 
 .accent {
@@ -60,33 +63,93 @@ body {
 
 .hero-subtitle {
   margin-top: 12px;
-  font-size: 16px;
+  font-size: 17px;
   color: #4b566a;
-  max-width: 700px;
+  max-width: 780px;
+}
+
+/* TWO COLUMNS LAYOUT */
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+/* COLLEFT = CONCEPT BOXES */
+.column-left {
+  padding-right: 10px;
+}
+
+/* COLRIGHT = FILTER BOX STICKY */
+.column-right {
+  position: sticky;
+  top: 100px;
+}
+
+/* CONCEPT BOXES */
+.concept-top {
+  margin-top: 20px;
+}
+
+.concept-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2A3F73;
+  margin-bottom: 20px;
+}
+
+.concept-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.concept-box {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.04);
+  border: 1px solid rgba(42,63,115,0.08);
+}
+
+.icon {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.concept-box h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #2A3F73;
+  margin-bottom: 4px;
+}
+
+.concept-box p {
+  font-size: 14px;
+  color: #54607a;
 }
 
 /* FILTER CARD */
 .filters-card {
   background: #ffffff;
   border-radius: 18px;
-  margin-top: 26px;
   padding: 24px;
-  box-shadow: 0 10px 32px rgba(0,0,0,0.06);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
   border: 1px solid rgba(42,63,115,0.06);
 }
 
 .filters-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #2A3F73;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .filters-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .field {
@@ -117,7 +180,7 @@ select:focus {
   border-color: #4FA3D1;
 }
 
-/* CTA BUTTON */
+/* BUTTON */
 .btn-primary {
   width: 100%;
   padding: 12px;
@@ -133,31 +196,32 @@ select:focus {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(47,103,196,0.35);
+  box-shadow: 0 12px 32px rgba(47,103,196,0.35);
 }
 
 .free-note {
-  margin-top: 10px;
+  margin-top: 12px;
   font-size: 12px;
   color: #6b7a95;
 }
 
 /* RESULTS */
 .results {
-  padding: 40px 6vw;
-  max-width: 1100px;
+  padding: 50px 6vw;
+  max-width: 1400px;
+  margin: 40px auto;
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: 26px;
   color: #2A3F73;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .results-subtitle {
-  font-size: 14px;
+  font-size: 15px;
   color: #5b677c;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .cards {
@@ -166,19 +230,19 @@ select:focus {
   gap: 18px;
 }
 
-/* CARD STYLING */
+/* RESULT CARD */
 .card {
   background: #ffffff;
   border-radius: 16px;
   padding: 16px;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
   border: 1px solid rgba(42,63,115,0.05);
 }
 
 .card-title {
   font-size: 17px;
   font-weight: 600;
-  color: #1f2e40;
+  margin-bottom: 6px;
 }
 
 .card-score {
@@ -189,7 +253,6 @@ select:focus {
   padding: 4px 8px;
   border-radius: 999px;
   display: inline-block;
-  margin-top: 6px;
 }
 
 .card-meta {
@@ -201,50 +264,7 @@ select:focus {
 .card-tagline {
   font-size: 13px;
   color: #394559;
-  margin-top: 8px;
-}
-
-/* CONCEPT SECTION */
-.concept {
-  padding: 40px 6vw 60px;
-  background: #ffffff;
-  border-top: 1px solid rgba(0,0,0,0.04);
-}
-
-.concept-title {
-  font-size: 22px;
-  color: #2A3F73;
-  margin-bottom: 22px;
-}
-
-.concept-grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-.concept-box {
-  background: #f4f7fb;
-  padding: 18px;
-  border-radius: 16px;
-  border: 1px solid rgba(42,63,115,0.05);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.04);
-}
-
-.concept-box .icon {
-  font-size: 26px;
-}
-
-.concept-box h3 {
   margin-top: 6px;
-  font-size: 17px;
-  color: #2A3F73;
-}
-
-.concept-box p {
-  margin-top: 4px;
-  font-size: 14px;
-  color: #55627a;
 }
 
 /* FOOTER */
@@ -255,9 +275,25 @@ select:focus {
   font-size: 12px;
   color: #6c7a90;
 }
-/* Concept section above filters */
-.concept-top {
-  margin-top: 40px;
-  margin-bottom: 50px;
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+  .column-right {
+    position: static;
+    margin-top: 30px;
+  }
 }
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 30px;
+  }
+  .filters-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 
