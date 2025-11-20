@@ -296,4 +296,47 @@ select:focus {
   }
 }
 
+/* TITOLO PRINCIPALE FILTRI */
+.filters-main-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #2A3F73;
+  margin-bottom: 18px;
+}
+
+
+/* FILTRI RISALTATI */
+.filters-card {
+  border-left: 6px solid #4FA3D1 !important;
+  box-shadow: 0 14px 38px rgba(47,103,196,0.22) !important;
+  transition: all 0.25s ease;
+}
+
+.filters-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 44px rgba(47,103,196,0.28);
+}
+
+
+/* ANIMAZIONI */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+  animation-delay: 0.1s;
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.9s ease forwards;
+  animation-delay: 0.25s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
 
