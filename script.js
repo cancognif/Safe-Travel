@@ -106,3 +106,9 @@ function displayResults(list) {
   document.getElementById("resultsSection").scrollIntoView({ behavior: "smooth" });
 }
 
+// Anima elementi al caricamento
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.fade-in, .fade-in-up').forEach(el => {
+    el.classList.add('animate');
+  });
+});
