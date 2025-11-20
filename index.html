@@ -1,37 +1,46 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafeTravel – Idee di viaggio intelligenti e gratuite</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeTravel – Trova la meta perfetta (gratis)</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
+  <!-- NAV -->
   <header class="nav">
     <div class="nav-left">
-      <img src="assets/logo.png" alt="SafeTravel Logo" class="logo">
+      <img src="assets/logo.png" alt="SafeTravel logo" class="logo">
       <span class="brand">SafeTravel</span>
     </div>
     <div class="nav-right">
-      <span class="nav-tagline">Travel Intelligence – Non vendiamo pacchetti.</span>
+      <span class="nav-tagline">Suggerimenti intelligenti. Nessuna prenotazione.</span>
     </div>
   </header>
 
-  <!-- HERO -->
+
+  <!-- HERO SECTION -->
   <section class="hero">
-    <h1>
+
+    <h1 class="hero-title">
       Non sai dove andare?<br>
-      <span class="hero-highlight">Ti suggeriamo noi la meta perfetta.</span>
+      <span class="accent">Ti suggeriamo noi la meta perfetta.</span>
     </h1>
+
     <p class="hero-subtitle">
-      Nessuna agenzia. Nessun portale prezzi. Solo idee intelligenti basate sui dati — gratis.
+      SafeTravel ti aiuta GRATIS a trovare la destinazione ideale in base a meteo, budget, periodo e sicurezza.<br>
+      <b>Nessuna vendita. Nessun pacchetto. Nessuna prenotazione.</b>
     </p>
 
     <!-- FILTRI -->
-    <form class="filters-card" id="tripForm">
+    <form id="tripForm" class="filters-card">
+
+      <div class="filters-header">
+        Personalizza i suggerimenti ↓
+      </div>
+
       <div class="filters-row">
         <div class="field">
           <label>Area</label>
@@ -52,7 +61,7 @@
 
       <div class="filters-row">
         <div class="field">
-          <label>Budget a persona</label>
+          <label>Budget</label>
           <select id="budget">
             <option value="low">&lt; 300€</option>
             <option value="mid">300–700€</option>
@@ -79,32 +88,65 @@
         </div>
 
         <div class="field field-button">
-          <button type="submit" class="btn-primary">Suggeriscimi una destinazione</button>
+          <button class="btn-primary" type="submit">
+            Suggeriscimi una destinazione →
+          </button>
         </div>
       </div>
 
-      <p class="small-note">
-        Servizio 100% gratuito – guadagniamo dal traffico, non dalle vendite.
+      <p class="free-note">
+        Servizio gratuito. SafeTravel guadagna solo dal traffico, non dalle prenotazioni.
       </p>
+
     </form>
   </section>
 
+
+
   <!-- RISULTATI -->
   <section class="results" id="resultsSection">
-    <h2>Idee di viaggio suggerite per te</h2>
-    <p class="results-subtitle">In base ai tuoi filtri.</p>
+    <h2 class="section-title">Le destinazioni migliori per te</h2>
+    <p class="results-subtitle">
+      Non sono offerte: sono suggerimenti intelligenti basati sui tuoi filtri.
+    </p>
+
     <div class="cards" id="cardsContainer"></div>
   </section>
 
-  <!-- WHY FREE -->
-  <section class="why-free">
-    <h2>Perché è gratis?</h2>
-    <p>SafeTravel non vende pacchetti. Non prende commissioni. Non ti spinge a comprare.</p>
-    <p>Guadagna solo dalla crescita del sito — per questo rimarrà gratuito per sempre.</p>
+
+
+  <!-- CONCEPT -->
+  <section class="concept">
+    <h2>Perché SafeTravel è diverso?</h2>
+
+    <div class="concept-grid">
+
+      <div class="concept-box">
+        <h3>❌ Niente prenotazioni</h3>
+        <p>Non vendiamo voli o hotel. Le destinazioni suggerite sono imparziali.</p>
+      </div>
+
+      <div class="concept-box">
+        <h3>📊 Data-Based</h3>
+        <p>Meteo, stagionalità, sicurezza, budget, facilità del viaggio: tutto integrato.</p>
+      </div>
+
+      <div class="concept-box">
+        <h3>💙 Sempre gratis</h3>
+        <p>Il sito cresce grazie alle visite, non ai pagamenti degli utenti.</p>
+      </div>
+
+      <div class="concept-box">
+        <h3>✈ Perfetto per indecisi</h3>
+        <p>È stato pensato proprio per chi non sa dove andare o ha paura di scegliere.</p>
+      </div>
+
+    </div>
   </section>
 
+
   <footer class="footer">
-    © SafeTravel — Travel Intelligence per tutti.
+    © SafeTravel — Idee di viaggio intelligenti e gratuite.
   </footer>
 
   <script src="script.js"></script>
