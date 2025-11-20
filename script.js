@@ -13,32 +13,79 @@ form.addEventListener("submit", (e) => {
   displayResults(results);
 });
 
+
+// -----------------------------
+// LOGICA DI SUGGERIMENTO
+// -----------------------------
 function getSuggestions(area, budget, vibe, period) {
-  // MOCK DATI — sostituibili con API reali
-  const db = [
-    {
-      title: "Lisbona",
+  
+  const suggestions = [];
+
+  // EUROPA LOW BUDGET
+  if (area === "europe" && budget === "low") {
+    suggestions.push({
+      title: "Porto",
       score: 85,
-      meta: "Europa • Clima mite",
-      tagline: "Ottima per chi vuole un viaggio semplice e sicuro."
-    },
-    {
+      meta: "Europa • Economica • Clima mite",
+      tagline: `Perfetta per un viaggio semplice e low cost. ${period ? "Periodo consigliato: " + period : ""}`
+    });
+    suggestions.push({
+      title: "Budapest",
+      score: 82,
+      meta: "Europa • Cultura • Città",
+      tagline: "Ottima per iniziare a viaggiare: sicura, bella e accessibile."
+    });
+  }
+
+  // MARE
+  if (area === "sea") {
+    suggestions.push({
       title: "Creta",
       score: 88,
-      meta: "Mare • Grecia",
-      tagline: "Perfetta se cerchi mare lungo e ottimo rapporto qualità/prezzo."
-    },
-    {
+      meta: "Grecia • Mare • Estate",
+      tagline: "Mare lungo, costi accessibili e ambiente semplice per chi viaggia poco."
+    });
+    suggestions.push({
+      title: "Algarve",
+      score: 84,
+      meta: "Portogallo • Mare",
+      tagline: "Scogliere, spiagge lunghe e clima stabile."
+    });
+  }
+
+  // MONTAGNA
+  if (area === "mountain") {
+    suggestions.push({
+      title: "Dolomiti",
+      score: 91,
+      meta: "Italia • Montagna",
+      tagline: "Perfetta per relax, natura e paesaggi incredibili."
+    });
+  }
+
+  // FALLBACK (quando area = mondo)
+  if (area === "world") {
+    suggestions.push({
+      title: "Lisbona",
+      score: 87,
+      meta: "Europa • Clima mite",
+      tagline: "Ideale per un viaggio leggero, sicuro, senza stress."
+    });
+    suggestions.push({
       title: "Dublino",
       score: 81,
       meta: "City Break • Nord Europa",
-      tagline: "Benessere, sicurezza, ideale per chi viaggia poco."
-    }
-  ];
+      tagline: "Perfetta per un weekend: tranquilla, semplice e accogliente."
+    });
+  }
 
-  return db;
+  return suggestions;
 }
 
+
+// -----------------------------
+// RENDER SUGGESTIONS
+// -----------------------------
 function displayResults(list) {
   container.innerHTML = "";
 
@@ -56,6 +103,6 @@ function displayResults(list) {
     container.appendChild(card);
   });
 
-  document.getElementById("resultsSection")
-    .scrollIntoView({ behavior: "smooth" });
+  document.getElementById("resultsSection").scrollIntoView({ behavior: "smooth" });
 }
+
