@@ -1,79 +1,112 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeTravel – Smart & Safe Trip Planner</title>
-    <link rel="stylesheet" href="styles/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeTravel – Idee di viaggio intelligenti e gratuite</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-    <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="nav-left">
-            <img src="assets/logo.png" class="logo">
-            <span class="brand">SafeTravel</span>
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="SafeTravel Logo" class="logo">
+      <span class="brand">SafeTravel</span>
+    </div>
+    <div class="nav-right">
+      <span class="nav-tagline">Travel Intelligence – Non vendiamo pacchetti.</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>
+      Non sai dove andare?<br>
+      <span class="hero-highlight">Ti suggeriamo noi la meta perfetta.</span>
+    </h1>
+    <p class="hero-subtitle">
+      Nessuna agenzia. Nessun portale prezzi. Solo idee intelligenti basate sui dati — gratis.
+    </p>
+
+    <!-- FILTRI -->
+    <form class="filters-card" id="tripForm">
+      <div class="filters-row">
+        <div class="field">
+          <label>Area</label>
+          <select id="area">
+            <option value="world">Tutto il mondo</option>
+            <option value="europe">Europa</option>
+            <option value="sea">Mare</option>
+            <option value="mountain">Montagna</option>
+            <option value="city">City Break</option>
+          </select>
         </div>
-    </header>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-content">
-            <h2>Il tuo viaggio, più sicuro.  
-                <span class="hero-highlight">Sempre.</span>
-            </h2>
-            <p>Pianificazione intelligente, analisi dei rischi, consigli personalizzati.  
-            Tutto in un’unica esperienza semplice e accogliente.</p>
+        <div class="field">
+          <label>Periodo</label>
+          <input type="text" id="period" placeholder="Es. marzo, estate, weekend lungo">
         </div>
-    </section>
+      </div>
 
-    <!-- FORM -->
-    <section class="form-wrapper">
-        <h3>Personalizza il tuo viaggio</h3>
+      <div class="filters-row">
+        <div class="field">
+          <label>Budget a persona</label>
+          <select id="budget">
+            <option value="low">&lt; 300€</option>
+            <option value="mid">300–700€</option>
+            <option value="high">&gt; 700€</option>
+          </select>
+        </div>
 
-        <form id="tripForm" class="form-card">
+        <div class="field">
+          <label>Persone</label>
+          <input type="number" id="people" min="1" value="2">
+        </div>
+      </div>
 
-            <div class="form-group">
-                <label>Destinazione</label>
-                <input type="text" id="destination" placeholder="Es. Tokyo">
-            </div>
+      <div class="filters-row">
+        <div class="field">
+          <label>Tipo viaggio</label>
+          <select id="vibe">
+            <option value="relax">Relax</option>
+            <option value="family">Family</option>
+            <option value="romantic">Romantico</option>
+            <option value="adventure">Avventura</option>
+            <option value="culture">Cultura</option>
+          </select>
+        </div>
 
-            <div class="form-group">
-                <label>Date</label>
-                <input type="text" id="dates" placeholder="12–19 Aprile 2025">
-            </div>
+        <div class="field field-button">
+          <button type="submit" class="btn-primary">Suggeriscimi una destinazione</button>
+        </div>
+      </div>
 
-            <div class="form-group">
-                <label>Budget</label>
-                <input type="number" id="budget" placeholder="Es. 1500">
-            </div>
+      <p class="small-note">
+        Servizio 100% gratuito – guadagniamo dal traffico, non dalle vendite.
+      </p>
+    </form>
+  </section>
 
-            <div class="form-group">
-                <label>Preferenze</label>
-                <input type="text" id="preferences" placeholder="Food, Culture, Shopping">
-            </div>
+  <!-- RISULTATI -->
+  <section class="results" id="resultsSection">
+    <h2>Idee di viaggio suggerite per te</h2>
+    <p class="results-subtitle">In base ai tuoi filtri.</p>
+    <div class="cards" id="cardsContainer"></div>
+  </section>
 
-            <button type="button" class="btn-primary" onclick="generateSummary()">
-                Genera il tuo piano di viaggio
-            </button>
-        </form>
-    </section>
+  <!-- WHY FREE -->
+  <section class="why-free">
+    <h2>Perché è gratis?</h2>
+    <p>SafeTravel non vende pacchetti. Non prende commissioni. Non ti spinge a comprare.</p>
+    <p>Guadagna solo dalla crescita del sito — per questo rimarrà gratuito per sempre.</p>
+  </section>
 
-    <!-- SUMMARY -->
-    <section id="summarySection" class="summary-section hidden">
-        <h3>Analisi del viaggio</h3>
-        <div id="summaryBox" class="summary-card"></div>
-    </section>
+  <footer class="footer">
+    © SafeTravel — Travel Intelligence per tutti.
+  </footer>
 
-    <!-- SAFE SCORE -->
-    <section class="safe-score">
-        <h3>SAFE Score</h3>
-        <p class="score-number">8.7 / 10</p>
-        <p class="score-desc">Calcolato su meteo, stabilità, rischio, salute, affollamento e affidabilità dei trasporti.</p>
-    </section>
-
-    <script src="scripts/app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
-
