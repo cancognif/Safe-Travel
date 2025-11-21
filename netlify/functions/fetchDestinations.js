@@ -2,29 +2,16 @@ exports.handler = async (event, context) => {
   try {
     const { origin } = JSON.parse(event.body);
 
-    console.log("📌 fetchDestinations called with origin:", origin);
+    console.log("📌 Fetching cheapest destinations for origin:", origin);
 
-    const url = `https://api.travelpayouts.com/v3/prices/cheap?origin=${origin}&currency=EUR&token=02dd565a82ec75665c68543e34abc5d6`;
+    const url = `https://api.travelpayouts.com/v1/prices/cheap?origin=${origin}&currency=EUR&token=02dd565a82ec75665c68543e34abc5d6`;
 
     console.log("🔗 Calling Travelpayouts URL:", url);
 
     const res = await fetch(url);
-
     console.log("📨 Travelpayouts status:", res.status);
 
-    const text = await res.text();
-    console.log("📄 Raw response:", text);
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      console.log("❌ JSON parse error:", e.message);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Invalid JSON", details: e.message })
-      };
-    }
+    const data = await res.json();
 
     return {
       statusCode: 200,
@@ -33,10 +20,10 @@ exports.handler = async (event, context) => {
     };
 
   } catch (e) {
-    console.log("🔥 Internal function error:", e.message);
+    console.log("🔥 Error in fetchDestinations:", e.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "API error", details: e.message })
+      body: JSON.stringify({ error: "Internal API error", details: e.message })
     };
   }
 };
