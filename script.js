@@ -1,277 +1,294 @@
-/* -------------------------------------------------------
-   SAFE TRAVEL – VERSIONE A (DINAMICA, ZERO DESTINAZIONI STATICHE)
-   Destinazioni generate da Travelpayouts in tempo reale
-   Prezzi reali → Meteo reale → TravelScore intelligente
--------------------------------------------------------- */
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeTravel – Trova la meta perfetta (gratis)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
 
-/* -----------------------------
-   MENU MOBILE
------------------------------ */
-const navToggle = document.getElementById("navToggle");
-const navMenu = document.querySelector(".nav-menu");
-
-if (navToggle && navMenu) {
-  navToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("open");
-  });
-}
-
-
-/* -----------------------------
-   LOADER
------------------------------ */
-function showLoader() {
-  const container = document.getElementById("cardsContainer");
-  container.innerHTML = `
-    <div style="font-size:16px;text-align:center;padding:20px;color:#2A3F73;">
-      Sto cercando le migliori destinazioni reali per te…
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-left">
+      <img src="assets/logo.png" alt="SafeTravel logo" class="logo">
+      <span class="brand">SafeTravel</span>
     </div>
-  `;
-}
 
+    <nav class="nav-menu">
+      <a href="index.html">🏠 Home</a>
+      <a href="#how-it-works">⚙️ Come funziona</a>
+      <a href="#resultsSection">🌍 Destinazioni suggerite</a>
+      <a href="#why-free">💙 Perché è gratis</a>
+      <a href="#about">👤 Chi sono</a>
+    </nav>
 
-/* -------------------------------------------------------
-   1) API METEO – OPEN METEO
--------------------------------------------------------- */
+    <div class="nav-toggle" id="navToggle">☰</div>
+  </header>
 
-async function getWeather(lat, lon) {
-  try {
-    const url =
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-      `&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FRome`;
+  <!-- HERO -->
+  <section class="hero">
 
-    const res = await fetch(url);
-    const data = await res.json();
+    <div class="hero-logo-box">
+      <img src="assets/logo.png" class="hero-logo" alt="Logo SafeTravel">
+      <h1 class="hero-brand-title">SafeTravel</h1>
+      <p class="hero-brand-subtitle">
+        L’assistente che ti suggerisce <b>mete basate sui dati reali</b>, non sulle offerte.
+      </p>
+    </div>
 
-    const min = Math.round(data.daily.temperature_2m_min[0]);
-    const max = Math.round(data.daily.temperature_2m_max[0]);
+    <h1 class="hero-title">
+      Hai voglia di viaggiare ma<br>
+      <span class="accent">non sai dove andare?</span>
+    </h1>
 
-    return `${min}°C / ${max}°C`;
-  } catch {
-    return "N/D";
-  }
-}
-
-
-/* -------------------------------------------------------
-   2) API Travelpayouts – PREZZO A/R PER DATE SPECIFICHE
--------------------------------------------------------- */
-
-const TP_TOKEN = "02dd565a82ec75665c68543e34abc5d6";
-
-async function getARPrice(origin, destCode, departDate, returnDate) {
-  const url =
-    `https://api.travelpayouts.com/v2/prices/calendar?` +
-    `origin=${origin}&destination=${destCode}` +
-    `&depart_date=${departDate}&return_date=${returnDate}` +
-    `&currency=EUR&token=${TP_TOKEN}`;
-
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
-
-    if (!json.data) return "N/D";
-
-    const key = `${departDate}:${returnDate}`;
-    const priceObj = json.data[key];
-    if (!priceObj) return "N/D";
-
-    return priceObj.value + " €";
-  } catch {
-    return "N/D";
-  }
-}
-
-
-/* -------------------------------------------------------
-   3) API Travelpayouts – TUTTE LE DESTINAZIONI REALI
--------------------------------------------------------- */
-
-async function loadRealDestinations(origin) {
-  const url =
-    `https://api.travelpayouts.com/v3/prices/cheap?origin=${origin}` +
-    `&currency=EUR&token=${TP_TOKEN}`;
-
-  const res = await fetch(url);
-  const json = await res.json();
-
-  if (!json.data) return [];
-
-  // json.data = { "LIS": {...}, "OPO": {...}, ... }
-  return Object.entries(json.data).map(([iata, info]) => ({
-    iata,
-    price: info.price,
-    airline: info.airline,
-    departure_at: info.departure_at,
-    return_at: info.return_at,
-    transfers: info.transfers,
-  }));
-}
-
-
-/* -------------------------------------------------------
-   4) RICAVARE INFO SULLA DESTINAZIONE
-   (Nome città + lat/lon + area Europa vs Mondo)
--------------------------------------------------------- */
-
-async function getCityInfo(iata) {
-  try {
-    const url = `https://places.aviasales.ru/v2/places.json?code=${iata}`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!data || !data[0]) return null;
-
-    return {
-      name: data[0].name || iata,
-      lat: data[0].coordinates.lat,
-      lon: data[0].coordinates.lon,
-      country: data[0].country_name,
-      isEurope: ["Italy","France","Spain","Portugal","Greece","Germany","Austria","Switzerland","Malta","Croatia","Slovenia","Hungary","Poland","Czechia","Belgium","Netherlands","Denmark","Sweden","Norway","Finland","UK","Ireland","Iceland"].includes(data[0].country_name)
-    };
-
-  } catch {
-    return null;
-  }
-}
-
-
-/* -------------------------------------------------------
-   5) CLASSIFICAZIONE AUTOMATICA (mare / città / montagna)
--------------------------------------------------------- */
-
-function classifyDestination(lat, lon) {
-  if (lat > 44) return "mountain"; // Europa centrale
-  if (lat < 42 && lon > 20) return "sea"; // Grecia
-  if (lat < 40) return "sea"; // Mediterraneo sud
-  return "city";
-}
-
-
-/* -------------------------------------------------------
-   6) TRAVEL SCORE INTELLIGENTE
--------------------------------------------------------- */
-
-function computeScore(dest, filters) {
-  let score = 50;
-
-  if (filters.budget === "low" && dest.price > 200) score -= 10;
-  if (filters.budget === "mid" && dest.price <= 80) score += 5;
-  if (filters.budget === "high") score += 5;
-
-  if (filters.area === "europe" && dest.isEurope) score += 10;
-  if (filters.area === "europe" && !dest.isEurope) score -= 10;
-
-  if (filters.type === dest.category) score += 8;
-
-  if (filters.duration === "weekend" && dest.flightTime > 3) score -= 6;
-
-  if (filters.children > 0 && dest.category === "sea") score += 5;
-
-  return score;
-}
-
-
-/* -------------------------------------------------------
-   7) GENERA UNA CARD FINALE
--------------------------------------------------------- */
-
-async function createCard(dest, origin, departDate, returnDate) {
-  const weather = await getWeather(dest.lat, dest.lon);
-  const priceAR = await getARPrice(origin, dest.iata, departDate, returnDate);
-
-  return `
-  <div class="card">
-    <h3>${dest.name}</h3>
-    <p class="card-meta">
-      🌍 ${dest.country}<br>
-      ✈ Volo da ${origin} → ${dest.iata}<br>
-      💶 Prezzo A/R nelle tue date: <b>${priceAR}</b><br>
-      🌤 Meteo: ${weather}<br>
-      🏖 Categoria: ${dest.category}
+    <p class="hero-subtitle hero-intro-spacing">
+      SafeTravel analizza <b>voli, prezzi e meteo reali</b> e ti propone le destinazioni più adatte a te.<br>
+      <b>Non vendiamo pacchetti. Non prendiamo commissioni. È sempre gratis.</b>
     </p>
+  </section>
 
-    <a href="https://www.google.com/travel/flights?q=${origin}%20${dest.iata}"
-       target="_blank" class="btn-primary">
-      Cerca su Google Flights →
-    </a>
-  </div>`;
-}
+  <!-- LAYOUT DUE COLONNE -->
+  <div class="two-columns">
 
+    <!-- COLONNA SINISTRA – FILTRI -->
+    <section class="filters column-left">
+      <h2 class="filters-main-title">La tua ricerca intelligente</h2>
 
-/* -------------------------------------------------------
-   8) MOTORE PRINCIPALE
--------------------------------------------------------- */
+      <form id="tripForm" class="filters-card">
 
-document.getElementById("tripForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
+        <p class="filters-title">
+          Compila i filtri obbligatori → SafeTravel ti suggerisce dove andare usando dati reali.
+        </p>
 
-  const airport = document.getElementById("airport").value;
-  const area = document.getElementById("area").value;
-  const budget = document.getElementById("budget").value;
-  const duration = document.getElementById("duration").value;
-  const type = document.getElementById("type").value;
-  const vibe = document.getElementById("vibe").value;
-  const children = parseInt(document.getElementById("children").value || "0");
-  const period = document.getElementById("period").value;
+        <!-- AEROPORTO + AREA -->
+        <div class="filters-row">
+          <div class="field">
+            <label>Aeroporto di partenza *</label>
+            <select id="airport" required>
+              <option value="">Seleziona...</option>
+              <option value="MIL">Milano (LIN/MXP/BGY)</option>
+              <option value="ROM">Roma (FCO/CIA)</option>
+              <option value="NAP">Napoli</option>
+              <option value="VCE">Venezia</option>
+              <option value="BLQ">Bologna</option>
+              <option value="TRN">Torino</option>
+              <option value="PSA">Pisa</option>
+              <option value="donotknow">Non lo so → suggeriscimi</option>
+            </select>
+          </div>
 
-  const startDate = document.getElementById("startDate").value;
-  const endDate = document.getElementById("endDate").value;
+          <div class="field">
+            <label>Area *</label>
+            <select id="area" required>
+              <option value="">Seleziona...</option>
+              <option value="europe">Solo Europa</option>
+              <option value="world">Mondo intero</option>
+              <option value="any">Non ho preferenze</option>
+            </select>
+          </div>
+        </div>
 
-  if (!airport || !area || !budget || !duration) {
-    alert("Compila tutti i filtri obbligatori");
-    return;
-  }
+        <!-- BUDGET + DURATA -->
+        <div class="filters-row">
+          <div class="field">
+            <label>Budget a persona *</label>
+            <select id="budget" required>
+              <option value="">Seleziona...</option>
+              <option value="low">Basso (&lt; 300€)</option>
+              <option value="mid">Medio (300–700€)</option>
+              <option value="high">Alto (&gt; 700€)</option>
+            </select>
+          </div>
 
-  if (!startDate || !endDate) {
-    alert("Inserisci le date di partenza e ritorno");
-    return;
-  }
+          <div class="field">
+            <label>Durata del viaggio *</label>
+            <select id="duration" required>
+              <option value="">Seleziona...</option>
+              <option value="weekend">Weekend (1–3 giorni)</option>
+              <option value="week">Settimana (4–9 giorni)</option>
+              <option value="twoweeks">2 settimane</option>
+              <option value="month">1 mese</option>
+            </select>
+          </div>
+        </div>
 
-  showLoader();
+        <!-- DATE -->
+        <div class="filters-row">
+          <div class="field">
+            <label>Data di partenza *</label>
+            <input type="date" id="startDate">
+          </div>
+          <div class="field">
+            <label>Data di ritorno *</label>
+            <input type="date" id="endDate">
+          </div>
+        </div>
 
-  // 1) Ottieni destinazioni reali
-  const rawDest = await loadRealDestinations(airport);
+        <!-- TIPO DESTINAZIONE + VIBE -->
+        <div class="filters-row">
+          <div class="field">
+            <label>Tipo destinazione (opzionale)</label>
+            <select id="type">
+              <option value="all">Qualsiasi</option>
+              <option value="sea">Mare</option>
+              <option value="mountain">Montagna</option>
+              <option value="city">Città</option>
+            </select>
+          </div>
 
-  // 2) Arricchisci con info
-  const enriched = [];
-  for (const d of rawDest.slice(0, 80)) { // massimo 80 destinazioni per velocità
-    const info = await getCityInfo(d.iata);
-    if (!info) continue;
+          <div class="field">
+            <label>Stile di viaggio (opzionale)</label>
+            <select id="vibe">
+              <option value="all">Qualsiasi</option>
+              <option value="relax">Relax</option>
+              <option value="adventure">Avventura</option>
+              <option value="culture">Cultura</option>
+              <option value="family">Family</option>
+              <option value="romantic">Romantico</option>
+            </select>
+          </div>
+        </div>
 
-    enriched.push({
-      ...d,
-      name: info.name,
-      lat: info.lat,
-      lon: info.lon,
-      country: info.country,
-      isEurope: info.isEurope,
-      category: classifyDestination(info.lat, info.lon)
-    });
-  }
+        <!-- BAMBINI + PERIODO -->
+        <div class="filters-row">
+          <div class="field">
+            <label>Bambini (opzionale)</label>
+            <select id="children">
+              <option value="0">Nessuno</option>
+              <option value="1">1 bambino</option>
+              <option value="2">2 bambini</option>
+              <option value="3">3 bambini</option>
+              <option value="4">4 bambini</option>
+            </select>
+          </div>
 
-  // 3) FILTRI utente
-  const filtered = enriched.filter(d => {
-    if (area === "europe" && !d.isEurope) return false;
-    if (type !== "all" && type !== d.category) return false;
-    return true;
-  });
+          <div class="field">
+            <label>Periodo indicativo (opzionale)</label>
+            <select id="period">
+              <option value="any">Qualsiasi</option>
+              <option value="spring">Primavera</option>
+              <option value="summer">Estate</option>
+              <option value="autumn">Autunno</option>
+              <option value="winter">Inverno</option>
+              <option value="weekendlungo">Weekend lungo / ponte</option>
+            </select>
+          </div>
+        </div>
 
-  // 4) TRAVEL SCORE
-  const scored = filtered
-    .map(d => ({
-      data: d,
-      score: computeScore(d, { area, budget, duration, type, children })
-    }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 10);
+        <!-- BOTTONE -->
+        <div class="filters-row">
+          <div class="field field-button">
+            <button class="btn-primary" type="submit">
+              Mostrami dove andare →
+            </button>
+          </div>
+        </div>
 
-  // 5) Render risultati
-  let out = "";
-  for (const item of scored) {
-    out += await createCard(item.data, airport, startDate, endDate);
-  }
+        <p class="free-note">
+          I campi con * sono obbligatori.<br>
+          SafeTravel utilizza <b>API di voli e meteo reali</b> per suggerirti le mete più adatte.
+          Il servizio per te è e resterà <b>gratuito</b>.
+        </p>
 
-  document.getElementById("cardsContainer").innerHTML = out;
-});
+      </form>
+    </section>
+
+    <!-- COLONNA DESTRA – CONCEPT -->
+    <section class="concept column-right" id="how-it-works">
+      <h2 class="concept-title">Perché SafeTravel è diverso da tutto ciò che conosci?</h2>
+
+      <div class="concept-grid">
+
+        <div class="concept-box">
+          <div class="icon">✨</div>
+          <h3>Nessuna prenotazione</h3>
+          <p>SafeTravel <b>non vende pacchetti</b>. I suggerimenti sono imparziali.</p>
+        </div>
+
+        <div class="concept-box">
+          <div class="icon">📊</div>
+          <h3>Dati veri, non offerte</h3>
+          <p>Prezzi dei voli, meteo reale e distanza vengono analizzati per te.</p>
+        </div>
+
+        <div class="concept-box">
+          <div class="icon">💙</div>
+          <h3>Sempre gratis</h3>
+          <p>Il progetto crescerà grazie al traffico, non ai tuoi pagamenti.</p>
+        </div>
+
+        <div class="concept-box">
+          <div class="icon">🧭</div>
+          <h3>Perfetto per indecisi</h3>
+          <p>Tu inserisci pochi filtri, SafeTravel ti mostra <b>mete concrete</b> con link per prenotare.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </div> <!-- fine due colonne -->
+
+  <!-- RISULTATI -->
+  <section class="results" id="resultsSection">
+    <h2 class="section-title">Le migliori destinazioni per te</h2>
+    <p class="results-subtitle">
+      Qui compariranno mete reali, con prezzi A/R per le tue date e meteo aggiornato.
+    </p>
+    <div class="cards" id="cardsContainer"></div>
+  </section>
+
+  <!-- SEZIONE PERCHÉ È GRATIS -->
+  <section class="results" id="why-free">
+    <h2 class="section-title">Perché SafeTravel è gratuito?</h2>
+    <p class="results-subtitle">
+      SafeTravel non guadagna dalle tue prenotazioni. L’obiettivo è crescere con <b>accessi e visibilità</b>,
+      per poi monetizzare con partnership e ADV, mantenendo i consigli indipendenti.
+    </p>
+  </section>
+
+  <!-- SEZIONE CHI SONO -->
+  <section class="results" id="about">
+    <h2 class="section-title">Chi c’è dietro SafeTravel</h2>
+    <p class="results-subtitle">
+      SafeTravel nasce da una data analyst appassionata di viaggi che vuole rendere
+      <b>più semplice, razionale e sereno</b> il momento della scelta della meta, soprattutto per chi è insicuro
+      o non si fida dei classici siti di prenotazione.
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer-premium">
+    <div class="footer-grid">
+
+      <div class="footer-col">
+        <img src="assets/logo.png" class="footer-logo" alt="Logo SafeTravel">
+        <p class="footer-text">
+          SafeTravel è il primo assistente che suggerisce <b>mete basate sui dati reali</b> (voli, prezzi, meteo),
+          senza venderti nulla. Il servizio per te è gratuito.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3>🌐 Navigazione</h3>
+        <a href="#top">Home</a>
+        <a href="#how-it-works">Come funziona</a>
+        <a href="#resultsSection">Destinazioni suggerite</a>
+        <a href="#why-free">Perché è gratis</a>
+        <a href="#about">Chi sono</a>
+      </div>
+
+      <div class="footer-col">
+        <h3>📩 Contatti</h3>
+        <p>Email: info@safetravel.com</p>
+        <p>Instagram: @safetravel</p>
+        <p>© SafeTravel – Tutti i diritti riservati</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
