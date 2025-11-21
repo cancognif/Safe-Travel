@@ -1,6 +1,7 @@
 /* -------------------------------------------------------
-   SAFE TRAVEL – SCRIPT COMPLETO FINALE (API REALI)
-   Con prezzi A/R basati sulle date selezionate
+   SAFE TRAVEL – VERSIONE A (DINAMICA, ZERO DESTINAZIONI STATICHE)
+   Destinazioni generate da Travelpayouts in tempo reale
+   Prezzi reali → Meteo reale → TravelScore intelligente
 -------------------------------------------------------- */
 
 
@@ -24,224 +25,187 @@ function showLoader() {
   const container = document.getElementById("cardsContainer");
   container.innerHTML = `
     <div style="font-size:16px;text-align:center;padding:20px;color:#2A3F73;">
-      Sto cercando le migliori destinazioni per le tue date…
+      Sto cercando le migliori destinazioni reali per te…
     </div>
   `;
 }
 
 
-/* -----------------------------
-   API METEO – OPEN METEO
------------------------------ */
-async function getRealWeather(lat, lon) {
-  const url =
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-    `&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FRome`;
+/* -------------------------------------------------------
+   1) API METEO – OPEN METEO
+-------------------------------------------------------- */
 
+async function getWeather(lat, lon) {
   try {
+    const url =
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+      `&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FRome`;
+
     const res = await fetch(url);
     const data = await res.json();
 
-    const tMin = Math.round(data.daily.temperature_2m_min[0]);
-    const tMax = Math.round(data.daily.temperature_2m_max[0]);
+    const min = Math.round(data.daily.temperature_2m_min[0]);
+    const max = Math.round(data.daily.temperature_2m_max[0]);
 
-    return `${tMin}°C / ${tMax}°C`;
-  } catch (e) {
-    return "Meteo non disponibile";
+    return `${min}°C / ${max}°C`;
+  } catch {
+    return "N/D";
   }
 }
 
 
-/* -----------------------------
-   API VOLI REALI – TRAVELPAYOUTS
-   Prezzi A/R per le date selezionate
------------------------------ */
+/* -------------------------------------------------------
+   2) API Travelpayouts – PREZZO A/R PER DATE SPECIFICHE
+-------------------------------------------------------- */
 
-const TRAVELPAYOUTS_TOKEN = "02dd565a82ec75665c68543e34abc5d6";
+const TP_TOKEN = "02dd565a82ec75665c68543e34abc5d6";
 
-async function getFlightPriceByDate(origin, destinationCode, departDate, returnDate) {
-  if (!departDate || !returnDate) {
-    return "Date non valide";
-  }
-
+async function getARPrice(origin, destCode, departDate, returnDate) {
   const url =
     `https://api.travelpayouts.com/v2/prices/calendar?` +
-    `origin=${origin}&destination=${destinationCode}` +
+    `origin=${origin}&destination=${destCode}` +
     `&depart_date=${departDate}&return_date=${returnDate}` +
-    `&currency=EUR&token=${TRAVELPAYOUTS_TOKEN}`;
+    `&currency=EUR&token=${TP_TOKEN}`;
 
   try {
     const res = await fetch(url);
     const json = await res.json();
 
-    if (!json.data) return "Prezzo non disponibile";
+    if (!json.data) return "N/D";
 
     const key = `${departDate}:${returnDate}`;
     const priceObj = json.data[key];
-
-    if (!priceObj) return "Prezzo non disponibile";
+    if (!priceObj) return "N/D";
 
     return priceObj.value + " €";
-
-  } catch (e) {
-    return "Errore prezzo volo";
+  } catch {
+    return "N/D";
   }
 }
 
 
 /* -------------------------------------------------------
-   DATABASE DESTINAZIONI (puoi aggiungerne altre)
+   3) API Travelpayouts – TUTTE LE DESTINAZIONI REALI
 -------------------------------------------------------- */
 
-const destinationsData = [
-  {
-    name: "Porto, Portogallo",
-    area: "europe",
-    type: "city",
-    vibe: "culture",
-    budget: "mid",
-    lat: 41.1579,
-    lon: -8.6291,
-    code: "OPO",
-    familyScore: 7,
-    flightHours: 2.4,
-    tagline: "Perfetta per weekend e cultura, ideale anche con bambini.",
-    flightTime: "2h 25m",
-    suggestedFlights: `
-      Ryanair FR7456 – Bergamo → Porto<br>
-      EasyJet U24311 – Malpensa → Porto
-    `,
-    skyscanner: "https://www.skyscanner.it/trasporti/voli/it/opo/",
-    gflights: "https://www.google.com/travel/flights?q=milano%20porto",
-    momondo: "https://www.momondo.it/volo/milano/porto-opo"
-  },
+async function loadRealDestinations(origin) {
+  const url =
+    `https://api.travelpayouts.com/v3/prices/cheap?origin=${origin}` +
+    `&currency=EUR&token=${TP_TOKEN}`;
 
-  {
-    name: "Creta, Grecia",
-    area: "europe",
-    type: "sea",
-    vibe: "relax",
-    budget: "mid",
-    lat: 35.3387,
-    lon: 25.1442,
-    code: "HER",
-    familyScore: 9,
-    flightHours: 2.7,
-    tagline: "Mare, relax, cibo ottimo. Family-friendly.",
-    flightTime: "2h 35m",
-    suggestedFlights: `
-      Aegean A3 613 – MXP → Heraklion<br>
-      Ryanair FR3412 – BGY → Chania
-    `,
-    skyscanner: "https://www.skyscanner.it/trasporti/voli/it/her/",
-    gflights: "https://www.google.com/travel/flights?q=milano%20creta",
-    momondo: "https://www.momondo.it/volo/milano/creta"
-  },
+  const res = await fetch(url);
+  const json = await res.json();
 
-  {
-    name: "Interlaken, Svizzera",
-    area: "europe",
-    type: "mountain",
-    vibe: "adventure",
-    budget: "high",
-    lat: 46.6863,
-    lon: 7.8632,
-    code: "BRN",
-    familyScore: 6,
-    flightHours: 1.2,
-    tagline: "Natura, laghi e montagne. Perfetta per attività outdoor.",
-    flightTime: "1h + treno",
-    suggestedFlights: `
-      Swiss LX317 – Malpensa → Berna<br>
-      Treno diretto da Milano Centrale
-    `,
-    skyscanner: "https://www.skyscanner.it/trasporti/voli/it/brn/",
-    gflights: "https://www.google.com/travel/flights?q=milano%20berna",
-    momondo: "https://www.momondo.it/volo/milano/berna"
-  }
-];
+  if (!json.data) return [];
+
+  // json.data = { "LIS": {...}, "OPO": {...}, ... }
+  return Object.entries(json.data).map(([iata, info]) => ({
+    iata,
+    price: info.price,
+    airline: info.airline,
+    departure_at: info.departure_at,
+    return_at: info.return_at,
+    transfers: info.transfers,
+  }));
+}
 
 
 /* -------------------------------------------------------
-   TRAVEL SCORE – punteggio intelligente
+   4) RICAVARE INFO SULLA DESTINAZIONE
+   (Nome città + lat/lon + area Europa vs Mondo)
 -------------------------------------------------------- */
 
-function computeTravelScore(dest, filters) {
+async function getCityInfo(iata) {
+  try {
+    const url = `https://places.aviasales.ru/v2/places.json?code=${iata}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data || !data[0]) return null;
+
+    return {
+      name: data[0].name || iata,
+      lat: data[0].coordinates.lat,
+      lon: data[0].coordinates.lon,
+      country: data[0].country_name,
+      isEurope: ["Italy","France","Spain","Portugal","Greece","Germany","Austria","Switzerland","Malta","Croatia","Slovenia","Hungary","Poland","Czechia","Belgium","Netherlands","Denmark","Sweden","Norway","Finland","UK","Ireland","Iceland"].includes(data[0].country_name)
+    };
+
+  } catch {
+    return null;
+  }
+}
+
+
+/* -------------------------------------------------------
+   5) CLASSIFICAZIONE AUTOMATICA (mare / città / montagna)
+-------------------------------------------------------- */
+
+function classifyDestination(lat, lon) {
+  if (lat > 44) return "mountain"; // Europa centrale
+  if (lat < 42 && lon > 20) return "sea"; // Grecia
+  if (lat < 40) return "sea"; // Mediterraneo sud
+  return "city";
+}
+
+
+/* -------------------------------------------------------
+   6) TRAVEL SCORE INTELLIGENTE
+-------------------------------------------------------- */
+
+function computeScore(dest, filters) {
   let score = 50;
 
-  const {
-    duration,
-    budget,
-    children,
-    type,
-    vibe,
-    period,
-    tripLengthDays
-  } = filters;
+  if (filters.budget === "low" && dest.price > 200) score -= 10;
+  if (filters.budget === "mid" && dest.price <= 80) score += 5;
+  if (filters.budget === "high") score += 5;
 
-  if (dest.budget === budget) score += 12;
-  else if (budget === "low" && dest.budget === "high") score -= 10;
+  if (filters.area === "europe" && dest.isEurope) score += 10;
+  if (filters.area === "europe" && !dest.isEurope) score -= 10;
 
-  if (children > 0) score += dest.familyScore * 0.7;
+  if (filters.type === dest.category) score += 8;
 
-  if (type !== "all" && dest.type === type) score += 8;
-  if (vibe !== "all" && dest.vibe === vibe) score += 8;
+  if (filters.duration === "weekend" && dest.flightTime > 3) score -= 6;
 
-  if (period === "summer" && dest.type === "sea") score += 5;
-
-  if (tripLengthDays) {
-    if (duration === "weekend" && tripLengthDays <= 3) score += 10;
-    if (duration === "week" && tripLengthDays <= 9) score += 10;
-  }
+  if (filters.children > 0 && dest.category === "sea") score += 5;
 
   return score;
 }
 
 
 /* -------------------------------------------------------
-   CARD CREATION (meteo + prezzo reale)
+   7) GENERA UNA CARD FINALE
 -------------------------------------------------------- */
 
-async function createCardWithAPI(dest, originCode, departDate, returnDate) {
-  const weather = await getRealWeather(dest.lat, dest.lon);
-  const price = await getFlightPriceByDate(originCode, dest.code, departDate, returnDate);
+async function createCard(dest, origin, departDate, returnDate) {
+  const weather = await getWeather(dest.lat, dest.lon);
+  const priceAR = await getARPrice(origin, dest.iata, departDate, returnDate);
 
   return `
-    <div class="card fade-in-up">
+  <div class="card">
+    <h3>${dest.name}</h3>
+    <p class="card-meta">
+      🌍 ${dest.country}<br>
+      ✈ Volo da ${origin} → ${dest.iata}<br>
+      💶 Prezzo A/R nelle tue date: <b>${priceAR}</b><br>
+      🌤 Meteo: ${weather}<br>
+      🏖 Categoria: ${dest.category}
+    </p>
 
-      <h3 class="card-title">${dest.name}</h3>
-      <p class="card-tagline">${dest.tagline}</p>
-
-      <p class="card-meta">
-        🌤 <b>Meteo:</b> ${weather}<br>
-        💶 <b>Prezzo A/R per le tue date:</b> ${price}<br>
-        ✈️ <b>Durata volo:</b> ${dest.flightTime}<br>
-        👨‍👩‍👧 <b>Family score:</b> ${dest.familyScore}/10
-      </p>
-
-      <h4 class="card-subtitle">Voli suggeriti</h4>
-      <p class="card-meta">${dest.suggestedFlights}</p>
-
-      <h4 class="card-subtitle">Dove puoi prenotare</h4>
-      <p class="card-meta">
-        <a href="${dest.skyscanner}" target="_blank">🌍 Skyscanner</a><br>
-        <a href="${dest.gflights}" target="_blank">✈ Google Flights</a><br>
-        <a href="${dest.momondo}" target="_blank">🔎 Momondo</a>
-      </p>
-
-    </div>
-  `;
+    <a href="https://www.google.com/travel/flights?q=${origin}%20${dest.iata}"
+       target="_blank" class="btn-primary">
+      Cerca su Google Flights →
+    </a>
+  </div>`;
 }
 
 
 /* -------------------------------------------------------
-   MOTORE DI RICERCA PRINCIPALE
+   8) MOTORE PRINCIPALE
 -------------------------------------------------------- */
 
-const tripForm = document.getElementById("tripForm");
-
-tripForm.addEventListener("submit", async function (event) {
-  event.preventDefault();
+document.getElementById("tripForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
 
   const airport = document.getElementById("airport").value;
   const area = document.getElementById("area").value;
@@ -252,56 +216,62 @@ tripForm.addEventListener("submit", async function (event) {
   const children = parseInt(document.getElementById("children").value || "0");
   const period = document.getElementById("period").value;
 
-  const departDate = document.getElementById("startDate").value;
-  const returnDate = document.getElementById("endDate").value;
+  const startDate = document.getElementById("startDate").value;
+  const endDate = document.getElementById("endDate").value;
 
-  const missing = [];
-  if (!airport) missing.push("aeroporto");
-  if (!area) missing.push("area");
-  if (!budget) missing.push("budget");
-  if (!duration) missing.push("durata");
-
-  if (missing.length > 0) {
-    alert("Per iniziare servono:\n- " + missing.join("\n- "));
+  if (!airport || !area || !budget || !duration) {
+    alert("Compila tutti i filtri obbligatori");
     return;
   }
 
-  if (!departDate || !returnDate) {
-    alert("Inserisci le date di partenza e ritorno.");
+  if (!startDate || !endDate) {
+    alert("Inserisci le date di partenza e ritorno");
     return;
   }
-
-  const start = new Date(departDate);
-  const end = new Date(returnDate);
-  const tripLengthDays = Math.round((end - start) / 86400000) + 1;
 
   showLoader();
 
-  let results = destinationsData.filter(dest => {
-    if (area === "europe" && dest.area !== "europe") return false;
-    if (area === "world") {} 
-    if (type !== "all" && dest.type !== type) return false;
-    if (vibe !== "all" && dest.vibe !== vibe) return false;
-    return dest.budget === budget;
+  // 1) Ottieni destinazioni reali
+  const rawDest = await loadRealDestinations(airport);
+
+  // 2) Arricchisci con info
+  const enriched = [];
+  for (const d of rawDest.slice(0, 80)) { // massimo 80 destinazioni per velocità
+    const info = await getCityInfo(d.iata);
+    if (!info) continue;
+
+    enriched.push({
+      ...d,
+      name: info.name,
+      lat: info.lat,
+      lon: info.lon,
+      country: info.country,
+      isEurope: info.isEurope,
+      category: classifyDestination(info.lat, info.lon)
+    });
+  }
+
+  // 3) FILTRI utente
+  const filtered = enriched.filter(d => {
+    if (area === "europe" && !d.isEurope) return false;
+    if (type !== "all" && type !== d.category) return false;
+    return true;
   });
 
-  if (results.length === 0) {
-    results = destinationsData.filter(dest => dest.budget === budget);
+  // 4) TRAVEL SCORE
+  const scored = filtered
+    .map(d => ({
+      data: d,
+      score: computeScore(d, { area, budget, duration, type, children })
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10);
+
+  // 5) Render risultati
+  let out = "";
+  for (const item of scored) {
+    out += await createCard(item.data, airport, startDate, endDate);
   }
 
-  const filters = { duration, budget, children, type, vibe, period, tripLengthDays };
-  results = results
-    .map(d => ({ dest: d, score: computeTravelScore(d, filters) }))
-    .sort((a, b) => b.score - a.score);
-
-  const container = document.getElementById("cardsContainer");
-
-  let html = "";
-  for (const item of results) {
-    html += await createCardWithAPI(item.dest, airport, departDate, returnDate);
-  }
-
-  container.innerHTML = html;
+  document.getElementById("cardsContainer").innerHTML = out;
 });
-
-
