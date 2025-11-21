@@ -1,36 +1,30 @@
-/* -------------------------------------------------------
-   SAFE TRAVEL – SCRIPT JS FINALE
-   - index.html: gestisce i filtri e fa redirect a results.html
-   - results.html: legge i filtri, chiama API reali,
-     genera le destinazioni (top + griglia)
--------------------------------------------------------- */
+/* ==========================================================
+   SAFE TRAVEL – SCRIPT JS (VERSIONE NETLIFY BACKEND READY)
+   - index.html → invia filtri
+   - results.html → riceve parametri, chiama Netlify Functions
+========================================================== */
 
 
-/* -----------------------------
-   NAV MENU (MOBILE)
------------------------------ */
+/* -------------------- MOBILE NAV ------------------------ */
 const navToggle = document.getElementById("navToggle");
 const navMenu = document.querySelector(".nav-menu");
 
-if (navToggle && navMenu) {
+if (navToggle) {
   navToggle.addEventListener("click", () => {
     navMenu.classList.toggle("open");
   });
 }
 
 
-/* -------------------------------------------------------
-   FUNZIONE UTILE: LEGGI PARAMETRI DALLA URL
--------------------------------------------------------- */
+/* -------------------- URL UTILITY ------------------------ */
 function getQueryParams() {
   return new URLSearchParams(window.location.search);
 }
 
 
-/* -------------------------------------------------------
-   1) LOGICA PER index.html → REDIRECT A results.html
--------------------------------------------------------- */
-
+/* ==========================================================
+   1) INDEX.HTML → REDIRECT AI RISULTATI
+========================================================== */
 const tripForm = document.getElementById("tripForm");
 
 if (tripForm) {
@@ -46,19 +40,20 @@ if (tripForm) {
 
     const type     = document.getElementById("type").value;
     const vibe     = document.getElementById("vibe").value;
-    const children = document.getElementById("children").value || "0";
+    const children = document.getElementById("children").value;
     const period   = document.getElementById("period").value;
 
+    // Validazione campi obbligatori
     const missing = [];
-    if (!airport)  missing.push("aeroporto di partenza");
-    if (!area)     missing.push("area");
-    if (!budget)   missing.push("budget");
-    if (!duration) missing.push("durata del viaggio");
-    if (!start)    missing.push("data di partenza");
-    if (!end)      missing.push("data di ritorno");
+    if (!airport)  missing.push("l’aeroporto");
+    if (!area)     missing.push("l’area");
+    if (!budget)   missing.push("il budget");
+    if (!duration) missing.push("la durata");
+    if (!start)    missing.push("la data di partenza");
+    if (!end)      missing.push("la data di ritorno");
 
     if (missing.length > 0) {
-      alert("Per iniziare ho bisogno di:\n- " + missing.join("\n- "));
+      alert("Per procedere manca:\n- " + missing.join("\n- "));
       return;
     }
 
@@ -80,421 +75,263 @@ if (tripForm) {
 }
 
 
-/* -------------------------------------------------------
-   2) LOGICA PER results.html → GENERARE RISULTATI
--------------------------------------------------------- */
+/* ==========================================================
+   2) RISULTATI (SE SIAMO IN results.html)
+========================================================== */
 
-const isResultsPage = window.location.pathname.endsWith("results.html") || 
-                      document.getElementById("appliedFilters");
+const isResultsPage =
+  window.location.pathname.endsWith("results.html") ||
+  document.getElementById("appliedFilters");
 
 if (isResultsPage) {
 
-  /* -----------------------------
-     COSTANTI & API
-  ----------------------------- */
 
-  const TP_TOKEN = "02dd565a82ec75665c68543e34abc5d6";
+/* ----------------------------------------------------------
+   FUNZIONI BACKEND (CHIAMANO NETLIFY FUNCTIONS)
+---------------------------------------------------------- */
 
-  async function getWeather(lat, lon) {
-    try {
-      const url =
-        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-        `&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FRome`;
+async function netlifyFetch(functionName, payload) {
+  const res = await fetch(`/.netlify/functions/${functionName}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
+}
 
-      const res = await fetch(url);
-      const data = await res.json();
+async function getRealDestinations(origin) {
+  return await netlifyFetch("fetchDestinations", { origin });
+}
 
-      const min = Math.round(data.daily.temperature_2m_min[0]);
-      const max = Math.round(data.daily.temperature_2m_max[0]);
+async function getCityInfo(iata) {
+  return await netlifyFetch("fetchCity", { iata });
+}
 
-      return `${min}°C / ${max}°C`;
-    } catch {
-      return "N/D";
-    }
+async function getWeather(lat, lon) {
+  return await netlifyFetch("fetchWeather", { lat, lon });
+}
+
+
+/* ----------------------------------------------------------
+   CLASSIFICAZIONE
+---------------------------------------------------------- */
+function classifyDestination(lat, lon) {
+  if (lat > 44) return "mountain";
+  if (lat < 40) return "sea";
+  return "city";
+}
+
+
+/* ----------------------------------------------------------
+   TRAVEL SCORE
+---------------------------------------------------------- */
+function computeScore(dest, filters) {
+  let score = 50;
+
+  const { area, budget, duration, type, children } = filters;
+
+  if (budget === "low" && dest.price <= 200) score += 12;
+  if (budget === "mid" && dest.price <= 600) score += 8;
+  if (budget === "high") score += 6;
+
+  if (area === "europe" && dest.isEurope) score += 10;
+  if (area === "europe" && !dest.isEurope) score -= 15;
+
+  if (type !== "all" && dest.category === type) score += 10;
+
+  if (duration === "weekend" && dest.flightHours > 3) score -= 8;
+
+  if (children > 0 && dest.category === "sea") score += 5;
+
+  return score;
+}
+
+
+/* ----------------------------------------------------------
+   COSTRUZIONE CARD
+---------------------------------------------------------- */
+
+function premiumCardHTML(dest, weather, price, origin) {
+  return `
+  <article class="card card-premium">
+    <h3 class="card-title">${dest.name}</h3>
+    <p class="card-country">${dest.country}</p>
+
+    <p class="card-meta">
+      🌦 Meteo: ${weather}<br>
+      💶 Prezzo A/R stimato: ${price}<br>
+      🏷 Categoria: ${dest.category}
+    </p>
+
+    <a class="btn-primary"
+       target="_blank"
+       href="https://www.google.com/travel/flights?q=${origin}%20${dest.iata}">
+       Vedi i voli →
+    </a>
+  </article>`;
+}
+
+function gridCardHTML(dest, weather, price, origin) {
+  return `
+  <article class="card">
+    <h3 class="card-title">${dest.name}</h3>
+    <p class="card-country">${dest.country}</p>
+
+    <p class="card-meta">
+      🌦 Meteo: ${weather}<br>
+      💶 Prezzo A/R stimato: ${price}<br>
+      🏷 Categoria: ${dest.category}
+    </p>
+
+    <a class="btn-secondary"
+       target="_blank"
+       href="https://www.google.com/travel/flights?q=${origin}%20${dest.iata}">
+       Vedi dettagli →
+    </a>
+  </article>`;
+}
+
+
+/* ----------------------------------------------------------
+   RIEPILOGO FILTRI
+---------------------------------------------------------- */
+function renderFiltersSummary(params) {
+  const box = document.getElementById("appliedFilters");
+  if (!box) return;
+
+  box.innerHTML = `
+    <div class="filters-summary-inner">
+      <h3>Filtri applicati</h3>
+      <p>
+        ✈ Aeroporto: <b>${params.get("airport")}</b><br>
+        🌍 Area: <b>${params.get("area")}</b><br>
+        💶 Budget: <b>${params.get("budget")}</b><br>
+        📆 Date: <b>${params.get("start")} → ${params.get("end")}</b><br>
+        ⏱ Durata: <b>${params.get("duration")}</b><br>
+        👶 Bambini: <b>${params.get("children")}</b><br>
+      </p>
+    </div>`;
+}
+
+
+/* ----------------------------------------------------------
+   FUNZIONE PRINCIPALE RISULTATI
+---------------------------------------------------------- */
+async function initResults() {
+
+  const params = getQueryParams();
+
+  const airport  = params.get("airport");
+  const area     = params.get("area");
+  const budget   = params.get("budget");
+  const duration = params.get("duration");
+  const start    = params.get("start");
+  const end      = params.get("end");
+  const type     = params.get("type");
+  const vibe     = params.get("vibe");
+  const children = parseInt(params.get("children"));
+  const period   = params.get("period");
+
+  renderFiltersSummary(params);
+
+  const topContainer  = document.getElementById("topCards");
+  const gridContainer = document.getElementById("gridResults");
+
+  topContainer.innerHTML =
+    "<p class='loader-text'>Sto analizzando i dati reali…</p>";
+
+  // fallback aeroporto
+  const origin = (airport === "donotknow" ? "MIL" : airport);
+
+  // 1️⃣ Recupero destinazioni reali
+  const raw = await getRealDestinations(origin);
+  if (!raw || !raw.data) {
+    topContainer.innerHTML =
+      "<p>Non riesco a recuperare le destinazioni. Riprova più tardi.</p>";
+    return;
   }
 
-  async function getARPrice(origin, destCode, departDate, returnDate) {
-    const url =
-      `https://api.travelpayouts.com/v2/prices/calendar?` +
-      `origin=${origin}&destination=${destCode}` +
-      `&depart_date=${departDate}&return_date=${returnDate}` +
-      `&currency=EUR&token=${TP_TOKEN}`;
+  // 2️⃣ Estraggo oggetti destinazione
+  const entries = Object.entries(raw.data).slice(0, 60);
 
-    try {
-      const res = await fetch(url);
-      const json = await res.json();
+  const enriched = [];
+  for (const [iata, info] of entries) {
+    const city = await getCityInfo(iata);
+    if (!city || !city[0]) continue;
 
-      if (!json.data) return "N/D";
+    const c = city[0];
 
-      const key = `${departDate}:${returnDate}`;
-      const priceObj = json.data[key];
-      if (!priceObj) return "N/D";
+    const category = classifyDestination(c.coordinates.lat, c.coordinates.lon);
 
-      return priceObj.value + " €";
-    } catch {
-      return "N/D";
-    }
-  }
-
-  async function loadRealDestinations(origin) {
-    // default se utente ha scelto "Non lo so" sull'aeroporto
-    if (origin === "donotknow") origin = "MIL";
-
-    const url =
-      `https://api.travelpayouts.com/v3/prices/cheap?origin=${origin}` +
-      `&currency=EUR&token=${TP_TOKEN}`;
-
-    const res = await fetch(url);
-    const json = await res.json();
-
-    if (!json.data) return [];
-
-    return Object.entries(json.data).map(([iata, info]) => ({
+    enriched.push({
       iata,
       price: info.price,
-      airline: info.airline,
-      departure_at: info.departure_at,
-      return_at: info.return_at,
-      transfers: info.transfers
-    }));
-  }
-
-  async function getCityInfo(iata) {
-    try {
-      const url = `https://places.aviasales.ru/v2/places.json?code=${iata}`;
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (!data || !data[0]) return null;
-
-      const c = data[0];
-
-      const europeCountries = [
-        "Italy","France","Spain","Portugal","Greece","Germany","Austria","Switzerland",
-        "Malta","Croatia","Slovenia","Hungary","Poland","Czechia","Czech Republic",
-        "Belgium","Netherlands","Denmark","Sweden","Norway","Finland",
-        "United Kingdom","UK","Ireland","Iceland"
-      ];
-
-      return {
-        name: c.name || iata,
-        lat: c.coordinates.lat,
-        lon: c.coordinates.lon,
-        country: c.country_name,
-        isEurope: europeCountries.includes(c.country_name)
-      };
-    } catch {
-      return null;
-    }
-  }
-
-
-  /* -----------------------------
-     CLASSIFICAZIONE SEMPLICE
-  ----------------------------- */
-  function classifyDestination(lat, lon) {
-    if (lat > 44) return "mountain";
-    if (lat < 40) return "sea";
-    if (lat < 42 && lon > 20) return "sea";
-    return "city";
-  }
-
-
-  /* -----------------------------
-     TRAVEL SCORE
-  ----------------------------- */
-  function computeScore(dest, filters) {
-    let score = 50;
-
-    const { area, budget, duration, type, children } = filters;
-
-    // budget vs prezzo
-    if (budget === "low" && dest.price <= 200) score += 12;
-    if (budget === "low" && dest.price > 350) score -= 10;
-    if (budget === "mid" && dest.price >= 150 && dest.price <= 600) score += 8;
-    if (budget === "high") score += 5;
-
-    // area (Europa / mondo)
-    if (area === "europe" && dest.isEurope) score += 10;
-    if (area === "europe" && !dest.isEurope) score -= 15;
-
-    // tipo destinazione
-    if (type !== "all" && dest.category === type) score += 8;
-
-    // durata (penalizza voli lunghi per weekend)
-    if (duration === "weekend" && dest.flightHours && dest.flightHours > 3) {
-      score -= 8;
-    }
-
-    // bambini
-    if (children > 0 && dest.category === "sea") score += 5;
-
-    return score;
-  }
-
-
-  /* -----------------------------
-     CARD PREMIUM (TOP 2)
-  ----------------------------- */
-  async function createPremiumCard(dest, origin, departDate, returnDate) {
-    const weather = await getWeather(dest.lat, dest.lon);
-    const price = await getARPrice(origin, dest.iata, departDate, returnDate);
-
-    return `
-      <article class="card card-premium">
-        <div class="card-premium-header">
-          <h3 class="card-title">${dest.name}</h3>
-          <p class="card-country">${dest.country}</p>
-        </div>
-
-        <p class="card-tagline">
-          Meta selezionata in base al tuo budget, all’area scelta e alle date indicate.
-        </p>
-
-        <p class="card-meta">
-          🌤 <b>Meteo (prossimi giorni):</b> ${weather}<br>
-          💶 <b>Prezzo A/R stimato per le tue date:</b> ${price}<br>
-          ✈️ <b>Codice aeroporto:</b> ${dest.iata}<br>
-          🏷 <b>Categoria:</b> ${dest.category === "sea" ? "Mare" : dest.category === "mountain" ? "Montagna" : "Città"}
-        </p>
-
-        <a class="btn-primary"
-          target="_blank"
-          href="https://www.google.com/travel/flights?q=${origin}%20${dest.iata}">
-          Apri in Google Flights →
-        </a>
-      </article>
-    `;
-  }
-
-
-  /* -----------------------------
-     CARD NORMALE (GRIGLIA)
-  ----------------------------- */
-  async function createGridCard(dest, origin, departDate, returnDate) {
-    const weather = await getWeather(dest.lat, dest.lon);
-    const price = await getARPrice(origin, dest.iata, departDate, returnDate);
-
-    return `
-      <article class="card">
-        <h3 class="card-title">${dest.name}</h3>
-        <p class="card-country">${dest.country}</p>
-
-        <p class="card-meta">
-          💶 <b>A/R stimato:</b> ${price}<br>
-          🌤 <b>Meteo:</b> ${weather}<br>
-          🏷 <b>Categoria:</b> ${dest.category}
-        </p>
-
-        <a class="btn-secondary"
-          target="_blank"
-          href="https://www.google.com/travel/flights?q=${origin}%20${dest.iata}">
-          Vedi i voli →
-        </a>
-      </article>
-    `;
-  }
-
-
-  /* -----------------------------
-     POPOLA RIEPILOGO FILTRI
-  ----------------------------- */
-  function renderFiltersSummary(params) {
-    const box = document.getElementById("appliedFilters");
-    if (!box) return;
-
-    const areaMap = {
-      europe: "Solo Europa",
-      world: "Mondo intero",
-      any: "Nessuna preferenza"
-    };
-
-    const budgetMap = {
-      low: "Basso (&lt; 300€)",
-      mid: "Medio (300–700€)",
-      high: "Alto (&gt; 700€)"
-    };
-
-    const durationMap = {
-      weekend: "Weekend (1–3 giorni)",
-      week: "1 settimana",
-      twoweeks: "2 settimane",
-      month: "1 mese"
-    };
-
-    const typeMap = {
-      all: "Qualsiasi",
-      sea: "Mare",
-      mountain: "Montagna",
-      city: "Città"
-    };
-
-    const vibeMap = {
-      all: "Qualsiasi",
-      relax: "Relax",
-      adventure: "Avventura",
-      culture: "Cultura",
-      family: "Family",
-      romantic: "Romantico"
-    };
-
-    const airport = params.get("airport") || "-";
-    const area    = areaMap[params.get("area")] || "-";
-    const budget  = budgetMap[params.get("budget")] || "-";
-    const duration= durationMap[params.get("duration")] || "-";
-    const type    = typeMap[params.get("type") || "all"];
-    const vibe    = vibeMap[params.get("vibe") || "all"];
-    const children= params.get("children") || "0";
-    const period  = params.get("period") || "Qualsiasi";
-    const start   = params.get("start") || "-";
-    const end     = params.get("end") || "-";
-
-    box.innerHTML = `
-      <div class="filters-summary-inner">
-        <h3>Filtri applicati</h3>
-        <p>
-          ✈ <b>Aeroporto:</b> ${airport}<br>
-          🌍 <b>Area:</b> ${area}<br>
-          💶 <b>Budget:</b> ${budget}<br>
-          📆 <b>Date:</b> ${start} → ${end}<br>
-          ⏱ <b>Durata:</b> ${duration}<br>
-          🏷 <b>Tipo:</b> ${type}<br>
-          🎭 <b>Stile viaggio:</b> ${vibe}<br>
-          👶 <b>Bambini:</b> ${children}<br>
-          🕒 <b>Periodo indicativo:</b> ${period}
-        </p>
-      </div>
-    `;
-  }
-
-
-  /* -----------------------------
-     FUNZIONE PRINCIPALE RISULTATI
-  ----------------------------- */
-  async function initResults() {
-    const params = getQueryParams();
-
-    const airport  = params.get("airport");
-    const area     = params.get("area");
-    const budget   = params.get("budget");
-    const duration = params.get("duration");
-    const start    = params.get("start");
-    const end      = params.get("end");
-
-    if (!airport || !area || !budget || !duration || !start || !end) {
-      alert("I parametri della ricerca non sono completi. Torna alla home e riprova.");
-      window.location.href = "index.html";
-      return;
-    }
-
-    // Riepilogo filtri
-    renderFiltersSummary(params);
-
-    const type     = params.get("type") || "all";
-    const vibe     = params.get("vibe") || "all";
-    const children = parseInt(params.get("children") || "0", 10);
-    const period   = params.get("period") || "any";
-
-    const topContainer  = document.getElementById("topCards");
-    const gridContainer = document.getElementById("gridResults");
-
-    if (topContainer) {
-      topContainer.innerHTML = `<p class="loader-text">Sto analizzando i dati reali delle destinazioni…</p>`;
-    }
-    if (gridContainer) {
-      gridContainer.innerHTML = "";
-    }
-
-    // 1) Carica destinazioni reali dall'aeroporto scelto
-    let raw;
-    try {
-      raw = await loadRealDestinations(airport);
-    } catch (e) {
-      console.error(e);
-      if (topContainer) {
-        topContainer.innerHTML = "<p>Non riesco a recuperare le destinazioni. Riprova più tardi.</p>";
-      }
-      return;
-    }
-
-    if (!raw || raw.length === 0) {
-      if (topContainer) {
-        topContainer.innerHTML = "<p>Nessuna destinazione trovata per questa combinazione.</p>";
-      }
-      return;
-    }
-
-    // 2) Arricchisci con info destinazione (città, paese, coordinate)
-    const enriched = [];
-    for (const d of raw.slice(0, 80)) {
-      const info = await getCityInfo(d.iata);
-      if (!info) continue;
-
-      const category = classifyDestination(info.lat, info.lon);
-
-      // euristica ore volo (non abbiamo l'esatto flight time)
-      let flightHours = null;
-      if (d.distance) {
-        flightHours = d.distance / 700;
-      }
-
-      enriched.push({
-        ...d,
-        name: info.name,
-        country: info.country,
-        lat: info.lat,
-        lon: info.lon,
-        isEurope: info.isEurope,
-        category,
-        flightHours
-      });
-    }
-
-    // 3) Filtri utente
-    const filtered = enriched.filter(d => {
-      if (area === "europe" && !d.isEurope) return false;
-      if (area === "world") { /* tutto ok */ }
-      if (type !== "all" && d.category !== type) return false;
-      // vibe per ora non filtra in modo "pesante", lo useremo in future versioni
-      return true;
+      name: c.name,
+      country: c.country_name,
+      lat: c.coordinates.lat,
+      lon: c.coordinates.lon,
+      isEurope:
+        ["Italy","France","Spain","Germany","Portugal","Greece","Austria","Switzerland",
+         "Belgium","Netherlands","Denmark","Sweden","Norway","Finland","UK","Ireland",
+         "Croatia","Slovenia","Poland","Hungary","Iceland","Czech Republic"]
+         .includes(c.country_name),
+      category
     });
-
-    if (!filtered.length) {
-      if (topContainer) {
-        topContainer.innerHTML = "<p>Nessuna destinazione coerente trovata. Prova ad allargare i filtri.</p>";
-      }
-      return;
-    }
-
-    // 4) Calcolo TravelScore
-    const filtersForScore = { area, budget, duration, type, children, period };
-    const scored = filtered
-      .map(d => ({
-        ...d,
-        travelScore: computeScore(d, filtersForScore)
-      }))
-      .sort((a, b) => b.travelScore - a.travelScore);
-
-    // 5) Suddividi: top 2 + resto
-    const top2 = scored.slice(0, 2);
-    const rest = scored.slice(2, 12); // massimo 10 altre
-
-    // 6) Render top 2
-    let topHtml = "";
-    for (const t of top2) {
-      topHtml += await createPremiumCard(t, airport === "donotknow" ? "MIL" : airport, start, end);
-    }
-    if (topContainer) topContainer.innerHTML = topHtml;
-
-    // 7) Render griglia resto
-    let gridHtml = "";
-    for (const r of rest) {
-      gridHtml += await createGridCard(r, airport === "donotknow" ? "MIL" : airport, start, end);
-    }
-    if (gridContainer) gridContainer.innerHTML = gridHtml;
   }
 
+  // 3️⃣ Filtri
+  const filtered = enriched.filter(d => {
+    if (area === "europe" && !d.isEurope) return false;
+    if (type !== "all" && d.category !== type) return false;
+    return true;
+  });
 
-  // Avvia logica risultati
-  initResults();
+  if (!filtered.length) {
+    topContainer.innerHTML =
+      "<p>Nessuna destinazione trovata con questi filtri.</p>";
+    return;
+  }
+
+  // 4️⃣ TravelScore
+  const scoreFilters = { area, budget, duration, type, children, period };
+
+  const scored = filtered
+    .map(d => ({
+      ...d,
+      travelScore: computeScore(d, scoreFilters)
+    }))
+    .sort((a, b) => b.travelScore - a.travelScore);
+
+  const top2  = scored.slice(0, 2);
+  const rest  = scored.slice(2, 12);
+
+
+  /* 5️⃣ Render TOP 2 */
+
+  let topHTML = "";
+  for (const dest of top2) {
+    const weather = await getWeather(dest.lat, dest.lon);
+    const price = dest.price + " €";
+
+    topHTML += premiumCardHTML(dest, weather, price, origin);
+  }
+  topContainer.innerHTML = topHTML;
+
+
+  /* 6️⃣ Render griglia */
+
+  let gridHTML = "";
+  for (const dest of rest) {
+    const weather = await getWeather(dest.lat, dest.lon);
+    const price = dest.price + " €";
+
+    gridHTML += gridCardHTML(dest, weather, price, origin);
+  }
+  gridContainer.innerHTML = gridHTML;
 }
+
+
+// Avvia la generazione se siamo in results.html
+initResults();
+
+} // fine if isResultsPage
