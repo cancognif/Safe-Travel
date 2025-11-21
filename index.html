@@ -18,25 +18,22 @@
 
     <nav class="nav-menu">
       <a href="index.html">🏠 Home</a>
-      <a href="how-it-works.html">⚙️ Come funziona</a>
-      <a href="destinations.html">🌍 Destinazioni</a>
-      <a href="why-free.html">💙 Perché è gratis</a>
-      <a href="about.html">👤 Chi sono</a>
+      <a href="#how">⚙️ Come funziona</a>
+      <a href="#why">💙 Perché è gratis</a>
+      <a href="#about">👤 Chi sono</a>
     </nav>
 
     <div class="nav-toggle" id="navToggle">☰</div>
   </header>
 
+
   <!-- HERO -->
   <section class="hero">
-
     <div class="hero-logo-box">
-      <img src="assets/logo.png" class="hero-logo" alt="Logo SafeTravel">
-
+      <img src="assets/logo.png" class="hero-logo">
       <h1 class="hero-brand-title">SafeTravel</h1>
-
       <p class="hero-brand-subtitle">
-        L’assistente che ti consiglia <b>mete basate sui tuoi desideri.</b>
+        L’assistente che ti suggerisce <b>mete basate sui dati reali</b>.
       </p>
     </div>
 
@@ -45,234 +42,204 @@
       <span class="accent">non sai dove andare?</span>
     </h1>
 
-    <p class="hero-subtitle hero-intro-spacing">
-      SafeTravel ti suggerisce <b>GRATIS</b> la destinazione perfetta.<br>
-      Zero pacchetti, zero commissioni. Solo dati reali.
+    <p class="hero-subtitle">
+      SafeTravel analizza voli, meteo e distanza per suggerirti la meta perfetta.
+      <br><b>Sempre gratis. Zero prenotazioni.</b>
     </p>
-
   </section>
 
-  <!-- LAYOUT DUE COLONNE -->
-  <div class="two-columns">
 
-    <!-- FILTRI -->
-    <section class="filters column-left">
+  <!-- FILTRI -->
+  <section class="filters-section">
+    <form id="tripForm" class="filters-card">
+
       <h2 class="filters-main-title">La tua ricerca intelligente</h2>
 
-      <form id="tripForm" class="filters-card fade-in">
-
-        <p class="filters-title">Compila i filtri obbligatori → SafeTravel farà il resto</p>
-
-        <!-- AEROPORTO (OBBLIGATORIO) -->
-        <div class="filters-row">
-          <div class="field">
-            <label>Aeroporto di partenza *</label>
-            <select id="airport" required>
-              <option value="">Seleziona...</option>
-              <option value="MIL">Milano (LIN/MXP/BGY)</option>
-              <option value="ROM">Roma (FCO/CIA)</option>
-              <option value="NAP">Napoli</option>
-              <option value="VCE">Venezia</option>
-              <option value="BLQ">Bologna</option>
-              <option value="TRN">Torino</option>
-              <option value="PSA">Pisa</option>
-              <option value="donotknow">Non lo so → suggeriscimi</option>
-            </select>
-          </div>
-
-          <!-- AREA (OBBLIGATORIA) -->
-          <div class="field">
-            <label>Area *</label>
-            <select id="area" required>
-              <option value="">Seleziona...</option>
-              <option value="europe">Europa</option>
-              <option value="world">Mondo</option>
-              <option value="any">Indeciso → scegli tu</option>
-            </select>
-          </div>
+      <!-- AEROPORTO + AREA -->
+      <div class="filters-row">
+        <div class="field">
+          <label>Aeroporto di partenza *</label>
+          <select id="airport" required>
+            <option value="">Seleziona...</option>
+            <option value="MIL">Milano (LIN/MXP/BGY)</option>
+            <option value="ROM">Roma (FCO/CIA)</option>
+            <option value="NAP">Napoli</option>
+            <option value="VCE">Venezia</option>
+            <option value="BLQ">Bologna</option>
+            <option value="TRN">Torino</option>
+            <option value="PSA">Pisa</option>
+            <option value="donotknow">Non lo so → suggeriscimi</option>
+          </select>
         </div>
 
-        <!-- BUDGET (OBBLIGATORIO) -->
-        <div class="filters-row">
-          <div class="field">
-            <label>Budget *</label>
-            <select id="budget" required>
-              <option value="">Seleziona...</option>
-              <option value="low">Basso (&lt; 300€)</option>
-              <option value="mid">Medio (300–700€)</option>
-              <option value="high">Alto (&gt; 700€)</option>
-            </select>
-          </div>
-
-          <!-- DURATA (OBBLIGATORIA) -->
-          <div class="field">
-            <label>Durata viaggio *</label>
-            <select id="duration" required>
-              <option value="">Seleziona...</option>
-              <option value="weekend">Weekend (1–3 giorni)</option>
-              <option value="week">Settimana (4–9 giorni)</option>
-              <option value="twoweeks">2 settimane</option>
-              <option value="month">1 mese</option>
-              <option value="any">Indeciso → scegli tu</option>
-            </select>
-          </div>
+        <div class="field">
+          <label>Area *</label>
+          <select id="area" required>
+            <option value="">Seleziona...</option>
+            <option value="europe">Solo Europa</option>
+            <option value="world">Mondo intero</option>
+            <option value="any">Nessuna preferenza</option>
+          </select>
         </div>
-<!-- DATE (OPZIONALI) -->
-<div class="filters-row">
-  <div class="field">
-    <label>Data di partenza (opzionale)</label>
-    <input type="date" id="startDate">
-  </div>
-
-  <div class="field">
-    <label>Data di ritorno (opzionale)</label>
-    <input type="date" id="endDate">
-  </div>
-</div>
-
-        <!-- TIPOLOGIA (OPZIONALE) -->
-        <div class="filters-row">
-          <div class="field">
-            <label>Tipo destinazione (opzionale)</label>
-            <select id="type">
-              <option value="all">Qualsiasi</option>
-              <option value="sea">Mare</option>
-              <option value="mountain">Montagna</option>
-              <option value="city">Città</option>
-            </select>
-          </div>
-
-          <!-- VIBE (OPZIONALE) -->
-          <div class="field">
-            <label>Stile di viaggio (opzionale)</label>
-            <select id="vibe">
-              <option value="all">Qualsiasi</option>
-              <option value="relax">Relax</option>
-              <option value="adventure">Avventura</option>
-              <option value="culture">Cultura</option>
-              <option value="family">Family</option>
-              <option value="romantic">Romantico</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- BAMBINI (OPZIONALE) -->
-        <div class="filters-row">
-          <div class="field">
-            <label>Bambini (opzionale)</label>
-            <select id="children">
-              <option value="0">Nessuno</option>
-              <option value="1">1 bambino</option>
-              <option value="2">2 bambini</option>
-              <option value="3">3 bambini</option>
-              <option value="4">4 bambini</option>
-            </select>
-          </div>
-
-          <!-- PERIODO (OPZIONALE) -->
-          <div class="field">
-            <label>Periodo (opzionale)</label>
-            <select id="period">
-              <option value="any">Qualsiasi</option>
-              <option value="spring">Primavera</option>
-              <option value="summer">Estate</option>
-              <option value="autumn">Autunno</option>
-              <option value="winter">Inverno</option>
-              <option value="weekendlungo">Weekend lungo</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- BOTTONE -->
-        <div class="filters-row">
-          <div class="field field-button">
-            <button class="btn-primary" type="submit">
-              Mostrami dove andare →
-            </button>
-          </div>
-        </div>
-
-        <p class="free-note">
-          * I filtri obbligatori servono per generare un consiglio basato su dati reali.<br>
-          SafeTravel è sempre gratuito.
-        </p>
-
-      </form>
-    </section>
-
-    <!-- CONCEPT -->
-    <section class="concept column-right fade-in-up">
-      <h2 class="concept-title">Perché SafeTravel è diverso da tutto ciò che conosci?</h2>
-
-      <div class="concept-grid">
-
-        <div class="concept-box">
-          <div class="icon">✨</div>
-          <h3>Nessuna prenotazione</h3>
-          <p>SafeTravel non vende niente. Suggerisce soltanto.</p>
-        </div>
-
-        <div class="concept-box">
-          <div class="icon">📊</div>
-          <h3>Dati reali</h3>
-          <p>Meteo, prezzi voli, durata viaggio, sicurezza e stagionalità.</p>
-        </div>
-
-        <div class="concept-box">
-          <div class="icon">💙</div>
-          <h3>Sempre gratis</h3>
-          <p>Il progetto cresce grazie al traffico, non dai tuoi pagamenti.</p>
-        </div>
-
-        <div class="concept-box">
-          <div class="icon">🧭</div>
-          <h3>Perfetto per indecisi</h3>
-          <p>Tu selezioni 4 cose → SafeTravel fa il resto.</p>
-        </div>
-
       </div>
-    </section>
 
-  </div>
+      <!-- BUDGET + DURATA -->
+      <div class="filters-row">
+        <div class="field">
+          <label>Budget *</label>
+          <select id="budget" required>
+            <option value="">Seleziona...</option>
+            <option value="low">Basso (&lt; 300€)</option>
+            <option value="mid">Medio (300–700€)</option>
+            <option value="high">Alto (&gt; 700€)</option>
+          </select>
+        </div>
 
-  <!-- RISULTATI -->
-  <section class="results" id="resultsSection">
-    <h2 class="section-title">Le migliori destinazioni per te</h2>
-    <p class="results-subtitle">Suggerimenti intelligenti, non offerte.</p>
-    <div class="cards" id="cardsContainer"></div>
+        <div class="field">
+          <label>Durata *</label>
+          <select id="duration" required>
+            <option value="">Seleziona...</option>
+            <option value="weekend">Weekend (1–3 giorni)</option>
+            <option value="week">1 settimana</option>
+            <option value="twoweeks">2 settimane</option>
+            <option value="month">1 mese</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- DATE -->
+      <div class="filters-row">
+        <div class="field">
+          <label>Data di partenza *</label>
+          <input type="date" id="startDate">
+        </div>
+
+        <div class="field">
+          <label>Data di ritorno *</label>
+          <input type="date" id="endDate">
+        </div>
+      </div>
+
+      <!-- TIPO + VIBE -->
+      <div class="filters-row">
+        <div class="field">
+          <label>Tipo (opzionale)</label>
+          <select id="type">
+            <option value="all">Tutto</option>
+            <option value="sea">Mare</option>
+            <option value="mountain">Montagna</option>
+            <option value="city">Città</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Stile viaggio (opz.)</label>
+          <select id="vibe">
+            <option value="all">Qualsiasi</option>
+            <option value="relax">Relax</option>
+            <option value="adventure">Avventura</option>
+            <option value="culture">Cultura</option>
+            <option value="family">Family</option>
+            <option value="romantic">Romantico</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- BAMBINI + PERIODO -->
+      <div class="filters-row">
+        <div class="field">
+          <label>Bambini (opzionale)</label>
+          <select id="children">
+            <option value="0">Nessuno</option>
+            <option value="1">1 bambino</option>
+            <option value="2">2 bambini</option>
+            <option value="3">3 bambini</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Periodo (opz.)</label>
+          <select id="period">
+            <option value="any">Qualsiasi</option>
+            <option value="spring">Primavera</option>
+            <option value="summer">Estate</option>
+            <option value="autumn">Autunno</option>
+            <option value="winter">Inverno</option>
+          </select>
+        </div>
+      </div>
+
+
+      <!-- CTA -->
+      <button class="btn-primary" type="submit">
+        Mostrami dove andare →
+      </button>
+
+      <p class="free-note">
+        SafeTravel utilizza <b>dati reali</b> per analizzare voli e meteo.
+        Il servizio è gratuito perché guadagnerà dal traffico, non da te.
+      </p>
+
+    </form>
   </section>
+
+
+  <!-- SECTION COME FUNZIONA -->
+  <section class="concept" id="how">
+    <h2 class="concept-title">Come funziona?</h2>
+
+    <div class="concept-grid">
+      <div class="concept-box">
+        <div class="icon">🔍</div>
+        <h3>Analisi intelligente</h3>
+        <p>Incrociamo prezzi, meteo e distanza per ogni destinazione reale.</p>
+      </div>
+
+      <div class="concept-box">
+        <div class="icon">📊</div>
+        <h3>Filtri sensati</h3>
+        <p>Niente caos: pochi filtri, ma utili e basati sulla tua esperienza.</p>
+      </div>
+
+      <div class="concept-box">
+        <div class="icon">🌍</div>
+        <h3>Risultati realistici</h3>
+        <p>Solo mete raggiungibili davvero e coerenti con le tue date.</p>
+      </div>
+
+      <div class="concept-box">
+        <div class="icon">💙</div>
+        <h3>Sempre gratis</h3>
+        <p>Il progetto cresce grazie alle visite, non alle prenotazioni.</p>
+      </div>
+    </div>
+
+  </section>
+
 
   <!-- FOOTER -->
   <footer class="footer-premium">
-
     <div class="footer-grid">
 
       <div class="footer-col">
-        <img src="assets/logo.png" class="footer-logo" alt="Logo SafeTravel">
-        <p class="footer-text">
-          SafeTravel è il primo assistente che suggerisce <b>mete basate sui dati</b>,
-          senza venderti nulla. Sempre gratuito.
-        </p>
+        <img src="assets/logo.png" class="footer-logo">
+        <p>SafeTravel: idee di viaggio basate sui dati reali, non sulle offerte.</p>
       </div>
 
       <div class="footer-col">
         <h3>🌐 Navigazione</h3>
-        <a href="index.html">Home</a>
-        <a href="how-it-works.html">Come funziona</a>
-        <a href="destinations.html">Destinazioni</a>
-        <a href="why-free.html">Perché è gratis</a>
-        <a href="about.html">Chi sono</a>
+        <a href="#how">Come funziona</a>
+        <a href="#why">Perché è gratis</a>
+        <a href="#about">Chi sono</a>
       </div>
 
       <div class="footer-col">
         <h3>📩 Contatti</h3>
-        <p>Email: info@safetravel.com</p>
-        <p>Instagram: @safetravel</p>
-        <p>© SafeTravel – Tutti i diritti riservati</p>
+        <p>info@safetravel.com</p>
+        <p>@safetravel</p>
       </div>
 
     </div>
-
   </footer>
 
   <script src="script.js"></script>
