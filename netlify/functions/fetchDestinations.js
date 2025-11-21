@@ -2,9 +2,11 @@ exports.handler = async (event, context) => {
   try {
     const { origin } = JSON.parse(event.body);
 
-    console.log("📌 Fetching cheapest destinations for origin:", origin);
+    console.log("📌 Fetching latest prices for origin:", origin);
 
-    const url = `https://api.travelpayouts.com/v1/prices/cheap?origin=${origin}&currency=EUR&token=02dd565a82ec75665c68543e34abc5d6`;
+    const url =
+      `https://api.travelpayouts.com/v2/prices/latest?` +
+      `origin=${origin}&currency=EUR&limit=50&show_to_affiliates=false&sorting=price&token=02dd565a82ec75665c68543e34abc5d6`;
 
     console.log("🔗 Calling Travelpayouts URL:", url);
 
