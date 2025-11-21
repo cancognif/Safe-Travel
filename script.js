@@ -1,6 +1,6 @@
 /* -------------------------------------------------------
    SAFE TRAVEL – SCRIPT COMPLETO FINALE (API REALI)
-   Filtri obbligatori + opzionali + family + duration
+   Filtri obbligatori + opzionali + family + date
 -------------------------------------------------------- */
 
 
@@ -39,6 +39,8 @@ function showLoader() {
 
 /* -----------------------------
    API METEO – OPEN METEO
+   (per ora usiamo il meteo dei prossimi giorni,
+    non ancora legato esattamente alle date scelte)
 ----------------------------- */
 async function getRealWeather(lat, lon) {
   const url =
@@ -62,6 +64,7 @@ async function getRealWeather(lat, lon) {
 
 /* -----------------------------
    API VOLI – TRAVELPAYOUTS
+   (prezzi indicativi, endpoint latest)
 ----------------------------- */
 
 /* ⭐ LA TUA API KEY PERSONALE */
@@ -91,8 +94,7 @@ async function getFlightPrice(origin, destinationCode) {
 
 
 /* -------------------------------------------------------
-   DATABASE DESTINAZIONI (ESEMPIO INIZIALE)
-   Puoi aggiungere destinazioni qui con le stesse proprietà
+   DATABASE DESTINAZIONI – PUOI ESTENDERLO
 -------------------------------------------------------- */
 
 const destinationsData = [
@@ -166,13 +168,21 @@ const destinationsData = [
 
 /* -------------------------------------------------------
    TRAVEL SCORE – PUNTEGGIO INTELLIGENTE
-   Usa durata, budget, bambini, tipo, ecc.
+   Usa durata, budget, bambini, tipo, vibe, periodo, giorni reali
 -------------------------------------------------------- */
 
 function computeTravelScore(dest, filters) {
   let score = 50;
 
-  const { duration, budget, children, type, vibe, period } = filters;
+  const {
+    duration,
+    budget,
+    children,
+    type,
+    vibe,
+    period,
+    tripLengthDays
+  } = filters;
 
   // 1) Budget
   if (dest.budget === budget) {
@@ -183,7 +193,7 @@ function computeTravelScore(dest, filters) {
     score -= 4;
   }
 
-  // 2) Durata vs ore volo
+  // 2) Durata "teorica" (weekend, settimana, ecc.) vs ore volo
   if (duration === "weekend") {
     if (dest.flightHours <= 2.5) score += 12;
     else if (dest.flightHours > 4) score -= 8;
@@ -193,12 +203,26 @@ function computeTravelScore(dest, filters) {
     if (dest.flightHours >= 3) score += 6;
   }
 
-  // 3) Bambini
-  if (children > 0) {
-    score += dest.familyScore * 0.8; // più alto il familyScore, meglio è
+  // 3) Durata reale in giorni (se l'utente ha inserito le date)
+  if (tripLengthDays && tripLengthDays > 0) {
+    if (duration === "weekend") {
+      if (tripLengthDays <= 3) score += 8;
+      if (tripLengthDays > 5) score -= 6;
+    } else if (duration === "week") {
+      if (tripLengthDays >= 4 && tripLengthDays <= 9) score += 8;
+    } else if (duration === "twoweeks") {
+      if (tripLengthDays >= 10 && tripLengthDays <= 16) score += 8;
+    } else if (duration === "month") {
+      if (tripLengthDays >= 20) score += 8;
+    }
   }
 
-  // 4) Tipo destinazione (mare / montagna / città)
+  // 4) Bambini
+  if (children > 0) {
+    score += dest.familyScore * 0.8;
+  }
+
+  // 5) Tipo destinazione (mare / montagna / città)
   if (type !== "all") {
     if (dest.type === type) {
       score += 8;
@@ -207,7 +231,7 @@ function computeTravelScore(dest, filters) {
     }
   }
 
-  // 5) Vibe
+  // 6) Vibe
   if (vibe !== "all") {
     if (dest.vibe === vibe) {
       score += 8;
@@ -218,7 +242,7 @@ function computeTravelScore(dest, filters) {
     }
   }
 
-  // 6) Periodo (super semplice per ora)
+  // 7) Periodo (semplice, ma espandibile)
   if (period === "summer" && dest.type === "sea") {
     score += 5;
   }
@@ -246,7 +270,7 @@ async function createCardWithAPI(dest, originCode) {
       <p class="card-tagline">${dest.tagline}</p>
 
       <p class="card-meta">
-        🌤 <b>Meteo reale oggi:</b> ${weather}<br>
+        🌤 <b>Meteo reale prossimi giorni:</b> ${weather}<br>
         💶 <b>Prezzo indicativo volo da ${originCode}:</b> ${price}<br>
         ✈️ <b>Durata volo:</b> ${dest.flightTime}<br>
         👨‍👩‍👧 <b>Family score:</b> ${dest.familyScore}/10
@@ -289,6 +313,9 @@ if (tripForm) {
     const children = parseInt(document.getElementById("children").value || "0", 10);
     const period = document.getElementById("period").value;
 
+    const startDateVal = document.getElementById("startDate")?.value || "";
+    const endDateVal   = document.getElementById("endDate")?.value || "";
+
     // VALIDAZIONE FILTRI OBBLIGATORI
     const missing = [];
     if (!airport) missing.push("aeroporto di partenza");
@@ -301,6 +328,26 @@ if (tripForm) {
       return;
     }
 
+    // VALIDAZIONE DATE (se entrambe inserite)
+    let tripLengthDays = null;
+    if (startDateVal && endDateVal) {
+      const start = new Date(startDateVal);
+      const end = new Date(endDateVal);
+
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        alert("Le date inserite non sono valide.");
+        return;
+      }
+
+      if (end < start) {
+        alert("La data di ritorno deve essere successiva alla data di partenza.");
+        return;
+      }
+
+      const diffMs = end.getTime() - start.getTime();
+      tripLengthDays = Math.round(diffMs / (1000 * 60 * 60 * 24)) + 1; // inclusivo
+    }
+
     showLoader();
 
     // NORMALIZZA AREA
@@ -309,20 +356,22 @@ if (tripForm) {
     // ORIGINE PER API VOLI
     let originCode = airport;
     if (airport === "donotknow") {
-      originCode = "MIL"; // default se non sa da dove partire
+      originCode = "MIL"; // fallback se non sa da dove parte
     }
 
     // FILTRAGGIO BASE
     let results = destinationsData.filter(dest => {
-      // Area: se "any" mostro tutto, se "europe" solo europa, se "world" tutto
+      // Area
       let matchArea = true;
       if (normalizedArea === "europe") {
         matchArea = dest.area === "europe";
       } else if (normalizedArea === "world") {
         matchArea = true;
+      } else if (normalizedArea === "any") {
+        matchArea = true;
       }
 
-      // Budget: obbligatorio
+      // Budget (obbligatorio)
       const matchBudget = dest.budget === budget;
 
       // Tipo (mare/montagna/città) opzionale
@@ -337,19 +386,28 @@ if (tripForm) {
       return matchArea && matchBudget && matchType && matchVibe;
     });
 
-    // Se non c'è nessun risultato con questi filtri, allargo un po'
+    // Se non c'è nessun risultato, allargo: considero solo il budget
     if (results.length === 0) {
       results = destinationsData.filter(dest => dest.budget === budget);
     }
 
+    const filtersForScore = {
+      duration,
+      budget,
+      children,
+      type,
+      vibe,
+      period,
+      tripLengthDays
+    };
+
     // CALCOLO TRAVEL SCORE E ORDINO
-    const filtersForScore = { duration, budget, children, type, vibe, period };
-    const resultsWithScore = results.map(dest => {
-      return {
+    const resultsWithScore = results
+      .map(dest => ({
         dest,
         score: computeTravelScore(dest, filtersForScore)
-      };
-    }).sort((a, b) => b.score - a.score);
+      }))
+      .sort((a, b) => b.score - a.score);
 
     const container = document.getElementById("cardsContainer");
     if (!container) return;
@@ -368,6 +426,5 @@ if (tripForm) {
     container.innerHTML = html;
   });
 }
-
 
 
