@@ -1,11 +1,6 @@
 /* ==========================================================
-   SAFE TRAVEL – SCRIPT JS (VERCEL READY, VERSIONE STABILE)
-   - Usa API Vercel (/api/xxx)
-   - TravelScore morbido, mai zero risultati
-   - 5 mete top + 10 alternative
-   - Supporta aeroporti reali via airports.json
+   SAFE TRAVEL – SCRIPT JS (VERCEL — VERSIONE DEFINITIVA)
 ========================================================== */
-
 
 /* -------------------- MOBILE NAV ------------------------ */
 const navToggle = document.getElementById("navToggle");
@@ -25,7 +20,7 @@ function getQueryParams() {
 
 
 /* ==========================================================
-   1) INDEX.HTML → REDIRECT VERSO RESULTS.HTML
+   1) INDEX → REDIRECT VERSO RESULTS.HTML
 ========================================================== */
 
 const tripForm = document.getElementById("tripForm");
@@ -78,7 +73,7 @@ if (tripForm) {
 
 
 /* ==========================================================
-   2) RISULTATI: CHIAMATE A VERCEL API
+   2) VERCEL API CALLER
 ========================================================== */
 
 async function callAPI(endpoint, payload) {
@@ -89,6 +84,11 @@ async function callAPI(endpoint, payload) {
   });
   return res.json();
 }
+
+
+/* ==========================================================
+   API WRAPPERS
+========================================================== */
 
 async function getRealDestinations(origin) {
   const data = await callAPI("fetchDestinations", { origin });
@@ -105,7 +105,7 @@ async function getWeather(lat, lon) {
 
 
 /* ==========================================================
-   3) FUNZIONI LOGICHE
+   UTILITY FUNZIONI
 ========================================================== */
 
 function classifyDestination(lat, lon) {
@@ -144,13 +144,13 @@ function computeScore(dest, filters) {
   if (filters.area === "europe" && !dest.isEurope)
     score -= 10;
 
-  // Categoria (mare, città, montagna)
+  // Categoria
   if (filters.type !== "all" && dest.category !== filters.type)
     score -= 5;
   else if (filters.type !== "all")
     score += 8;
 
-  // Bambini = bonus mare
+  // Bambini → preferenza mare
   if (filters.children > 0 && dest.category === "sea")
     score += 5;
 
@@ -159,7 +159,7 @@ function computeScore(dest, filters) {
 
 
 /* ==========================================================
-   4) HTML CARDS
+   CARD HTML
 ========================================================== */
 
 function premiumCardHTML(dest, weather, origin) {
@@ -204,7 +204,7 @@ function gridCardHTML(dest, weather, origin) {
 
 
 /* ==========================================================
-   5) MAIN RESULTS LOGIC
+   MAIN — RESULTS
 ========================================================== */
 
 async function initResults() {
@@ -212,7 +212,12 @@ async function initResults() {
   const params = getQueryParams();
 
   let airport = params.get("airport");
-  if (airport === "donotknow") airport = "MIL";
+
+  // ⭐ CORREZIONE AUTOMATICA AEROPORTI
+  if (airport === "MIL") airport = "MXP";
+  if (airport === "ROM") airport = "FCO";
+
+  if (airport === "donotknow") airport = "MXP";
 
   const filters = {
     area: params.get("area"),
@@ -235,14 +240,14 @@ async function initResults() {
     return;
   }
 
-  // 2) Prendo il prezzo più basso per destinazione
+  // 2) Prezzo minimo per IATA
   const unique = new Map();
   for (const t of tickets) {
     if (!unique.has(t.destination) || t.price < unique.get(t.destination).price)
       unique.set(t.destination, t);
   }
 
-  // 3) Arricchimento con info città
+  // 3) Arricchimento con città
   const enriched = [];
   for (const [iata, t] of unique.entries()) {
     const info = await getCityData(iata);
@@ -267,7 +272,7 @@ async function initResults() {
     return;
   }
 
-  // 4) TravelScore e ordinamento
+  // 4) TravelScore
   const ranked = enriched
     .map(d => ({ ...d, travelScore: computeScore(d, filters) }))
     .sort((a, b) => b.travelScore - a.travelScore);
@@ -292,7 +297,6 @@ async function initResults() {
     const weather = w?.daily
       ? `${Math.round(w.daily.temperature_2m_min[0])}° / ${Math.round(w.daily.temperature_2m_max[0])}°`
       : "N/D";
-
     gridHTML += gridCardHTML(d, weather, airport);
   }
   gridContainer.innerHTML = gridHTML;
@@ -300,9 +304,10 @@ async function initResults() {
 
 
 /* ==========================================================
-   6) START
+   START
 ========================================================== */
 
 if (window.location.pathname.includes("results.html")) {
   initResults();
 }
+
