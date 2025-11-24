@@ -18,12 +18,25 @@
 
 <body>
 
-<!-- NAVBAR -->
+<!-- NAVBAR NUOVA -->
 <header class="nav">
   <div class="nav-left">
     <img src="assets/logo.png" alt="SafeTraveling logo" class="logo">
     <span class="brand">SafeTraveling</span>
   </div>
+  <nav class="nav-menu">
+    <a href="index.html">🏠 Home</a>
+    <a href="about.html">👤 Chi sono</a>
+
+    <div class="dropdown">
+      <button class="dropbtn">🌐 Lingua ▾</button>
+      <div class="dropdown-content">
+        <a href="?lang=it">🇮🇹 Italiano</a>
+        <a href="?lang=en">🇬🇧 English</a>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-toggle" id="navToggle">☰</div>
 </header>
 
 <!-- HERO -->
@@ -35,7 +48,7 @@
 
   <p class="hero-subtitle">
     Questi risultati si aggiornano automaticamente in base ai dati reali.<br>
-    (Presto funzioneranno anche con prezzi e mete Kiwi in tempo reale)
+    Presto saranno collegati ai prezzi reali Kiwi.
   </p>
 </section>
 
@@ -50,7 +63,7 @@
 <!-- OTHER DESTINATIONS -->
 <section class="results">
   <h2 class="section-title">🌍 Altre destinazioni adatte a te</h2>
-  <p class="results-subtitle">Qui trovi tutte le mete che rispettano i tuoi filtri.</p>
+  <p class="results-subtitle">Qui trovi tutte le mete compatibili con la tua ricerca.</p>
 
   <div id="gridResults" class="cards"></div>
 </section>
