@@ -32,7 +32,8 @@ if (form) {
       children
     });
 
-    window.location.href = results.html?${params.toString()};
+    // 🚀 CORRETTA
+    window.location.href = `results.html?${params.toString()}`;
   });
 }
 
