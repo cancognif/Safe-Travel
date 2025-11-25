@@ -33,7 +33,7 @@ if (form) {
     });
 
     // 🚀 CORRETTA
-    window.location.href = `results.html?${params.toString()}`;
+    window.location.href = results.html?${params.toString()};
   });
 }
 
