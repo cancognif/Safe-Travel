@@ -3,19 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.2" />
-  <title>SafeTraveling – Trova la meta perfetta (gratis)</title>
+  <title>SafeTraveling – Trova la meta perfetta</title>
 
-  <!-- FAVICON & ICONS -->
+  <!-- FAVICON -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180.png">
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#2A3F73">
 
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- ADSENSE SCRIPT (attivo quando sostituisci il tuo codice) -->
+  <!-- ADSENSE (attivo quando aggiungi il tuo codice) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=CA-YOUR-CODE"
     crossorigin="anonymous"></script>
 </head>
@@ -44,50 +40,59 @@
 </header>
 
 
-<!-- ⭐ ADV #1 — TOP HOMEPAGE -->
+<!-- ⭐ ADV TOP -->
 <div class="ad-container ad-top-home">
   <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="CA-YOUR-CODE"
-        data-ad-slot="2000000001"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
+       style="display:block"
+       data-ad-client="CA-YOUR-CODE"
+       data-ad-slot="2000000001"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
   <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
 
-<!-- HERO -->
-<section class="hero">
+<!-- HERO ROW -->
+<section class="hero hero-row">
 
-  <h1 class="hero-title">
-    Hai voglia di viaggiare ma<br>
-    <span class="accent">non sai dove andare?</span>
-  </h1>
+  <!-- LEFT COLUMN -->
+  <div class="hero-left">
+    <img src="assets/logo.png" alt="SafeTraveling logo" class="hero-main-logo">
+    <h1 class="hero-brand">SafeTraveling</h1>
+  </div>
 
-  <p class="hero-subtitle">
-    SafeTraveling ti suggerisce GRATIS la destinazione perfetta in base ai tuoi desideri.<br>
-    <b>Non vendiamo pacchetti. Non prendiamo commissioni. Non manipoliamo i risultati.</b>
-  </p>
+  <!-- RIGHT COLUMN -->
+  <div class="hero-right">
+    <h1 class="hero-title">
+      Hai voglia di viaggiare ma<br>
+      <span class="accent">non sai dove andare?</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      SafeTraveling ti suggerisce GRATIS la destinazione perfetta in base ai tuoi desideri.<br>
+      <b>Non vendiamo pacchetti. Non prendiamo commissioni.</b>
+    </p>
+  </div>
 
 </section>
 
 
-<!-- ⭐ ADV #2 — UNDER HERO -->
+<!-- ⭐ ADV UNDER HERO -->
 <div class="ad-container ad-under-hero">
   <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="CA-YOUR-CODE"
-        data-ad-slot="2000000002"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
+       style="display:block"
+       data-ad-client="CA-YOUR-CODE"
+       data-ad-slot="2000000002"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
   <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
 
-<!-- LAYOUT A DUE COLONNE -->
+<!-- TWO COLUMNS -->
 <section class="two-columns">
 
-  <!-- FILTRI A SINISTRA -->
+  <!-- FILTERS -->
   <section class="filters column-left">
 
     <h2 class="filters-main-title">La tua ricerca intelligente</h2>
@@ -109,7 +114,6 @@
             <option value="BLQ">Bologna</option>
             <option value="TRN">Torino</option>
             <option value="PSA">Pisa</option>
-            <option value="donotknow">Non lo so → suggeriscimi</option>
           </select>
         </div>
       </div>
@@ -126,9 +130,8 @@
         </div>
       </div>
 
-      <!-- AREA / BUDGET -->
+      <!-- AREA + BUDGET -->
       <div class="filters-row">
-
         <div class="field">
           <label>Area *</label>
           <select id="area" required>
@@ -150,12 +153,10 @@
             <option value="high">Oltre 700 €</option>
           </select>
         </div>
-
       </div>
 
-      <!-- DURATA / BAMBINI -->
+      <!-- DURATA + BAMBINI -->
       <div class="filters-row">
-
         <div class="field">
           <label>Durata *</label>
           <select id="duration" required>
@@ -170,7 +171,6 @@
           <label>Bambini</label>
           <input type="number" id="children" value="0" min="0">
         </div>
-
       </div>
 
       <!-- SUBMIT -->
@@ -182,14 +182,14 @@
         </div>
       </div>
 
-      <p class="free-note">Servizio totalmente gratuito. Il progetto cresce grazie alle visite, non grazie ai tuoi soldi.</p>
+      <p class="free-note">Servizio sempre gratuito. Nessun pacchetto, nessuna commissione.</p>
 
     </form>
 
   </section>
 
 
-  <!-- CONCEPT A DESTRA -->
+  <!-- CONCEPT RIGHT -->
   <section class="concept column-right fade-in-up">
 
     <h2 class="concept-title">Perché SafeTraveling è diverso?</h2>
@@ -199,34 +199,35 @@
       <div class="concept-box">
         <div class="icon">✨</div>
         <h3>Nessuna prenotazione</h3>
-        <p>I suggerimenti sono imparziali. Non vendiamo nulla.</p>
+        <p>Sempre imparziale. Non vendiamo nulla.</p>
       </div>
 
       <div class="concept-box">
         <div class="icon">📊</div>
         <h3>Basiamo tutto sui dati</h3>
-        <p>Mete ideali per periodo, costi, meteo, distanza e semplicità.</p>
+        <p>Periodo, meteo, costi, distanze e semplicità.</p>
       </div>
 
       <div class="concept-box">
         <div class="icon">💙</div>
         <h3>Sempre gratis</h3>
-        <p>Il progetto cresce con le visite, non con le commissioni.</p>
+        <p>Il progetto cresce con le visite, non con i tuoi soldi.</p>
       </div>
 
       <div class="concept-box">
         <div class="icon">🧭</div>
         <h3>Perfetto per indecisi</h3>
-        <p>Tu scegli budget e periodo. Noi pensiamo al resto.</p>
+        <p>Tu scegli budget e periodo, noi troviamo la meta.</p>
       </div>
 
     </div>
 
   </section>
 
-</section> <!-- END two-columns -->
+</section>
 
 
+<!-- FOOTER -->
 <footer class="footer">
   © SafeTraveling — Idee di viaggio basate sui dati. Sempre gratis.
 </footer>
