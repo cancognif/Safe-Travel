@@ -1,5 +1,5 @@
 /* ===============================
-   SAFE TRAVELING – SCRIPT FINALE
+   SAFE TRAVELING – SCRIPT FINALE FIX
    =============================== */
 
 // FORM (INDEX.HTML)
@@ -16,7 +16,6 @@ if (form) {
     const startDate = document.getElementById("startDate").value;
     const endDate = document.getElementById("endDate").value;
 
-    // VALIDAZIONE
     if (!airport || !area || !budget || !duration || !startDate || !endDate) {
       alert("Compila tutti i campi obbligatori.");
       return;
@@ -53,8 +52,13 @@ function getQueryParams() {
 async function generateResults() {
   if (!document.getElementById("gridResults")) return;
 
+  // Messaggio caricamento
+  document.getElementById("topCards").innerHTML =
+    "<p>🔍 Sto analizzando mete reali…</p>";
+
   const filters = getQueryParams();
 
+  // Destinazioni demo
   const fakeDestinations = [
     { name: "Valencia", country: "Spagna", price: 89, score: 92, type: "city" },
     { name: "Porto", country: "Portogallo", price: 120, score: 88, type: "city" },
@@ -65,42 +69,47 @@ async function generateResults() {
 
   let filtered = fakeDestinations;
 
-  if (filters.area === "sea")
-    filtered = filtered.filter((d) => d.type === "sea");
+  // Filtro area
+  if (filters.area === "sea") filtered = filtered.filter(d => d.type === "sea");
+  if (filters.area === "city") filtered = filtered.filter(d => d.type === "city");
 
-  if (filters.area === "city")
-    filtered = filtered.filter((d) => d.type === "city");
-
+  // Filtro budget corretto
   filtered = filtered.filter((d) => {
-    if (filters.budget === "low") return d.price < 120;
-    if (filters.budget === "mid") return d.price >= 120 && d.price <= 300;
-    if (filters.budget === "high") return d.price > 300;
+    if (filters.budget === "low") return d.price <= 120;
+    if (filters.budget === "mid") return d.price > 120 && d.price <= 250;
+    if (filters.budget === "high") return d.price > 250;
     return true;
   });
 
+  // Se nessuna meta combacia → NON lasciare tutto vuoto
+  if (filtered.length === 0) {
+    document.getElementById("topCards").innerHTML =
+      "<p>Nessuna destinazione trovata con questi filtri 😕<br>Prova a cambiare area o budget.</p>";
+
+    document.getElementById("gridResults").innerHTML = "";
+    return;
+  }
+
+  // Top 2 destinazioni
   const top = [...filtered].sort((a, b) => b.score - a.score).slice(0, 2);
 
   document.getElementById("topCards").innerHTML = top
-    .map(
-      (d) => `
-      <div class="card">
-        <h3 class="card-title">${d.name}, ${d.country}</h3>
-        <span class="card-score">⭐ ${d.score}/100</span>
-        <p class="card-meta">Da €${d.price}</p>
-      </div>`
-    )
-    .join("");
+    .map((d) => `
+        <div class="card">
+          <h3 class="card-title">${d.name}, ${d.country}</h3>
+          <span class="card-score">⭐ ${d.score}/100</span>
+          <p class="card-meta">Da €${d.price}</p>
+        </div>
+    `).join("");
 
   document.getElementById("gridResults").innerHTML = filtered
-    .map(
-      (d) => `
-      <div class="card">
-        <h3 class="card-title">${d.name}, ${d.country}</h3>
-        <span class="card-score">⭐ ${d.score}/100</span>
-        <p class="card-meta">Da €${d.price}</p>
-      </div>`
-    )
-    .join("");
+    .map((d) => `
+        <div class="card">
+          <h3 class="card-title">${d.name}, ${d.country}</h3>
+          <span class="card-score">⭐ ${d.score}/100</span>
+          <p class="card-meta">Da €${d.price}</p>
+        </div>
+    `).join("");
 }
 
 generateResults();
