@@ -66,50 +66,37 @@ body {
   cursor: pointer;
 }
 
-/* HERO */
-.hero {
-  padding: 50px 6vw;
-  text-align: center;
+/* HERO – LOGO ADATTATO */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.hero-logo-box {
-  margin-bottom: 40px;
+.hero-main-logo {
+  width: 90px;        /* dimensione ridotta e armoniosa */
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
 }
 
-.hero-logo {
-  height: 120px;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
-}
-
-.hero-brand-title {
-  font-size: 36px;
-  font-weight: 800;
+.hero-brand {
+  font-size: 28px;    /* più elegante e proporzionato */
   color: #2A3F73;
+  font-weight: 800;
 }
 
-.hero-brand-subtitle {
-  font-size: 16px;
-  color: #4b566a;
-  margin-top: 4px;
+/* Mobile */
+@media (max-width: 900px) {
+  .hero-main-logo {
+    width: 75px;      /* ancora più piccolo su mobile */
+  }
+
+  .hero-brand {
+    font-size: 24px;
+  }
 }
 
-.hero-title {
-  font-size: 38px;
-  font-weight: 700;
-  color: #1f2e40;
-  line-height: 1.25;
-  margin-top: 20px;
-}
-
-.accent {
-  color: #4FA3D1;
-}
-
-.hero-intro-spacing {
-  margin-top: 15px;
-  font-size: 16px;
-  color: #4b566a;
-}
 
 /* TWO COLUMNS LAYOUT */
 .two-columns {
