@@ -1,4 +1,81 @@
 <!DOCTYPE html>
-<html><body>
-<h1>Risultati Premium</h1>
-</body></html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risultati – SafeTraveling</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-left">
+      <img src="assets/logo-icon.png" class="logo-small" alt="SafeTraveling icon">
+      <span class="brand">SafeTraveling</span>
+    </div>
+
+    <nav class="nav-menu">
+      <a href="index.html">🏠 Home</a>
+      <a href="about.html">👤 Chi sono</a>
+
+      <div class="dropdown">
+        <button class="dropbtn">🌐 Lingua ▾</button>
+        <div class="dropdown-content">
+          <a href="?lang=it">🇮🇹 Italiano</a>
+          <a href="?lang=en">🇬🇧 English</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- HERO RISULTATI -->
+  <section class="hero-main hero-results">
+    <img src="assets/logo.png" class="hero-logo results-logo" alt="SafeTraveling logo">
+
+    <div class="hero-text">
+      <h1 class="hero-title">
+        Le migliori destinazioni per te<br>
+        <span class="accent">basate sui tuoi filtri</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Queste mete sono scelte combinando <b>budget, periodo, area</b> e stile di viaggio.
+        Per ora usiamo un motore dati interno, in attesa dell’aggancio alle API di voli reali.
+      </p>
+    </div>
+  </section>
+
+  <!-- MESSAGGIO STATO -->
+  <section class="results-status-wrapper">
+    <p id="statusMessage" class="status-message">
+      Sto analizzando mete reali…
+    </p>
+  </section>
+
+  <!-- RISULTATI TOP -->
+  <section class="results">
+    <h2 class="section-title">🌟 Le tue 2 scelte TOP</h2>
+    <div id="topCards" class="cards"></div>
+  </section>
+
+  <!-- ALTRI RISULTATI -->
+  <section class="results">
+    <h2 class="section-title">🌍 Altre destinazioni adatte a te</h2>
+    <div id="gridResults" class="cards"></div>
+  </section>
+
+  <section class="results-back">
+    <a href="index.html" class="btn-primary btn-back">
+      Torna ai filtri →
+    </a>
+  </section>
+
+  <footer class="footer">
+    © SafeTraveling — Idee di viaggio intelligenti e gratuite.
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
