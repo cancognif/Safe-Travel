@@ -177,6 +177,7 @@ if (editForm) {
       children: document.getElementById("edit_children").value
     });
 
+    // 🔥 CORRETTA
     window.location.href = results.html?${params.toString()};
   });
 }
