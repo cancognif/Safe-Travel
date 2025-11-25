@@ -32,11 +32,12 @@ if (form) {
       children
     });
 
-    window.location.href = `results.html?${params.toString()}`;
+    window.location.href = results.html?${params.toString()};
   });
 }
 
-// Lettura parametri da URL (results.html)
+
+// Lettura parametri URL (results.html)
 function getQueryParams() {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -50,13 +51,14 @@ function getQueryParams() {
   };
 }
 
-// Motore semplice di destinazioni "data-driven" interne
+
+// Motore semplice di destinazioni interne
 async function generateResults() {
   const grid = document.getElementById("gridResults");
   const top = document.getElementById("topCards");
   const statusEl = document.getElementById("statusMessage");
 
-  if (!grid || !top) return; // Non siamo su results.html
+  if (!grid || !top) return;
 
   const filters = getQueryParams();
 
@@ -64,7 +66,6 @@ async function generateResults() {
     statusEl.textContent = "Sto analizzando mete reali…";
   }
 
-  // Dataset interno di destinazioni (MVP)
   const destinations = [
     { name: "Valencia", country: "Spagna", area: "sea", type: "city-sea", price: 120, score: 92 },
     { name: "Porto", country: "Portogallo", area: "sea", type: "city-sea", price: 110, score: 90 },
@@ -78,21 +79,18 @@ async function generateResults() {
     { name: "Dublino", country: "Irlanda", area: "europe", type: "city", price: 230, score: 83 }
   ];
 
-  // Applichiamo i filtri dell'utente
   let filtered = [...destinations];
 
-  // Area
+  // Filtri area
   if (filters.area === "sea") {
     filtered = filtered.filter(d => d.type.includes("sea"));
   } else if (filters.area === "city") {
     filtered = filtered.filter(d => d.type.includes("city"));
   } else if (filters.area === "europe") {
-    filtered = filtered.filter(d => d.country !== "Spagna" || d.name !== "Canarie"); // esempio
-  } else if (filters.area === "world") {
-    // nessun filtro aggiuntivo, mondo = tutto
+    filtered = filtered.filter(d => d.country !== "Spagna" || d.name !== "Canarie");
   }
 
-  // Budget
+  // Filtri budget
   filtered = filtered.filter(d => {
     if (filters.budget === "low") return d.price < 130;
     if (filters.budget === "mid") return d.price >= 130 && d.price <= 220;
@@ -100,20 +98,14 @@ async function generateResults() {
     return true;
   });
 
-  // Se non troviamo nulla, mostriamo un messaggio
   if (!filtered.length) {
-    if (statusEl) {
-      statusEl.textContent =
-        "Con questi filtri non ho trovato mete perfette. Prova ad allargare budget o area.";
-    }
+    statusEl.textContent = "Con questi filtri non trovo mete. Prova ad ampliare la ricerca.";
     top.innerHTML = "";
     grid.innerHTML = "";
     return;
   }
 
-  // Ordiniamo per "score" (TravelScore)
   filtered.sort((a, b) => b.score - a.score);
-
   const top2 = filtered.slice(0, 2);
 
   top.innerHTML = top2
@@ -121,10 +113,7 @@ async function generateResults() {
       <div class="card">
         <h3 class="card-title">${d.name}, ${d.country}</h3>
         <span class="card-score">⭐ TravelScore ${d.score}/100</span>
-        <p class="card-meta">Indicativamente da €${d.price} a persona (volo + base)</p>
-        <p class="card-meta">
-          Suggerimento: cerca su Skyscanner o Google Flights partendo dal tuo aeroporto di partenza.
-        </p>
+        <p class="card-meta">Indicativamente da €${d.price} a persona.</p>
       </div>
     `)
     .join("");
@@ -139,45 +128,7 @@ async function generateResults() {
     `)
     .join("");
 
-  if (statusEl) {
-    statusEl.textContent = "Ecco le mete che si adattano ai tuoi filtri (versione MVP, senza voli ancora collegati).";
-  }
+  statusEl.textContent = "Ecco le mete più adatte ai tuoi filtri.";
 }
 
-// Avvio generazione risultati se siamo su results.html
 generateResults();
-/* =======================
-   MODIFICA FILTRI IN RESULTS
-   ======================= */
-
-const editForm = document.getElementById("editFiltersForm");
-
-if (editForm) {
-  const p = getQueryParams();
-
-  // Pre-compileremo i campi con i valori già inseriti:
-  document.getElementById("edit_airport").value = p.airport;
-  document.getElementById("edit_startDate").value = p.startDate;
-  document.getElementById("edit_endDate").value = p.endDate;
-  document.getElementById("edit_area").value = p.area;
-  document.getElementById("edit_budget").value = p.budget;
-  document.getElementById("edit_duration").value = p.duration;
-  document.getElementById("edit_children").value = p.children;
-
-  editForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const params = new URLSearchParams({
-      airport: document.getElementById("edit_airport").value,
-      startDate: document.getElementById("edit_startDate").value,
-      endDate: document.getElementById("edit_endDate").value,
-      area: document.getElementById("edit_area").value,
-      budget: document.getElementById("edit_budget").value,
-      duration: document.getElementById("edit_duration").value,
-      children: document.getElementById("edit_children").value
-    });
-
-    // 🔥 CORRETTA
-    window.location.href = results.html?${params.toString()};
-  });
-}
