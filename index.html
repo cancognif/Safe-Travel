@@ -1,132 +1,21 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang='it'>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SafeTraveling – Trova la meta perfetta</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Favicon -->
-  <link rel="icon" href="favicon-32.png" type="image/png">
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>SafeTraveling</title>
+<link rel='stylesheet' href='style.css'>
+<link rel='icon' type='image/png' href='assets/icons/favicon-32.png'>
 </head>
-
 <body>
-
-<!-- ================= NAVBAR ================= -->
-<header class="nav">
-  <div class="nav-left">
-    <img src="assets/logo-icon.png" class="nav-icon" alt="logo">
-    <span class="nav-brand">SafeTraveling</span>
-  </div>
-
-  <nav class="nav-menu">
-    <a href="about.html">Chi sono</a>
-
-    <div class="dropdown">
-      <button class="dropbtn">🌐 Lingua</button>
-      <div class="dropdown-content">
-        <a href="?lang=it">🇮🇹 Italiano</a>
-        <a href="?lang=en">🇬🇧 English</a>
-      </div>
-    </div>
-  </nav>
+<header class='nav'>
+  <img src='assets/logo-icon.png' class='logo'>
+  <span class='brand'>SafeTraveling</span>
 </header>
-
-
-<!-- ================= HERO ================= -->
-<section class="hero">
-
-  <div class="hero-left">
-    <h1 class="hero-title">
-      La prima piattaforma che ti dice  
-      <span class="accent">dove andare in viaggio</span><br>
-      usando solo i tuoi desideri.
-    </h1>
-
-    <p class="hero-subtitle">
-      Zero offerte. Zero prezzi pilotati.<br>
-      <b>Solo suggerimenti intelligenti basati sui dati.</b><br>
-      Completamente gratuito.
-    </p>
-
-    <a href="#filters" class="btn-primary hero-btn">Inizia ora →</a>
-  </div>
-
-  <div class="hero-right">
-    <img src="assets/hero-travel.png" class="hero-img" alt="travel illustration">
-  </div>
-
-</section>
-
-
-<!-- ================= FORM FILTRI ================= -->
-<section id="filters" class="filters-container">
-
-  <h2 class="section-title">La tua ricerca intelligente</h2>
-
-  <form id="tripForm" class="filters-card">
-
-    <div class="field">
-      <label>Aeroporto di partenza *</label>
-      <select id="airport" required>
-        <option value="">Seleziona...</option>
-        <option value="MIL">Milano</option>
-        <option value="ROM">Roma</option>
-        <option value="NAP">Napoli</option>
-        <option value="VCE">Venezia</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>Data di partenza *</label>
-      <input type="date" id="startDate" required>
-    </div>
-
-    <div class="field">
-      <label>Data di ritorno *</label>
-      <input type="date" id="endDate" required>
-    </div>
-
-    <div class="field">
-      <label>Area *</label>
-      <select id="area" required>
-        <option value="world">Tutto il mondo</option>
-        <option value="europe">Europa</option>
-        <option value="sea">Mare</option>
-        <option value="mountain">Montagna</option>
-        <option value="city">Città</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>Budget *</label>
-      <select id="budget" required>
-        <option value="low">&lt; 120€</option>
-        <option value="mid">120–300€</option>
-        <option value="high">&gt; 300€</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>Durata *</label>
-      <select id="duration" required>
-        <option value="weekend">Weekend</option>
-        <option value="week">1 settimana</option>
-        <option value="long">Lungo periodo</option>
-      </select>
-    </div>
-
-    <button class="btn-primary" type="submit">Mostrami dove andare →</button>
-  </form>
-
-</section>
-
-
-<!-- ================= FOOTER ================= -->
-<footer class="footer">
-  © SafeTraveling — Idee di viaggio basate sui dati. Sempre gratuito.
-</footer>
-
-<script src="script.js"></script>
+<main>
+<h1>Benvenuta in SafeTraveling Premium</h1>
+<p>Questa è la homepage premium.</p>
+</main>
+<script src='script.js'></script>
 </body>
 </html>
