@@ -1,5 +1,5 @@
 /* ===============================
-   SAFE TRAVELING – SCRIPT FINALE
+   SAFE TRAVEL – SCRIPT FINALE
    =============================== */
 
 // Gestione form in index.html
