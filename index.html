@@ -1,21 +1,132 @@
 <!DOCTYPE html>
-<html lang='it'>
+<html lang="it">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>SafeTraveling</title>
-<link rel='stylesheet' href='style.css'>
-<link rel='icon' type='image/png' href='assets/icons/favicon-32.png'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeTraveling – Trova la meta perfetta</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<header class='nav'>
-  <img src='assets/logo-icon.png' class='logo'>
-  <span class='brand'>SafeTraveling</span>
-</header>
-<main>
-<h1>Benvenuta in SafeTraveling Premium</h1>
-<p>Questa è la homepage premium.</p>
-</main>
-<script src='script.js'></script>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-left">
+      <img src="assets/logo-icon.png" class="logo-small" alt="SafeTraveling icon">
+      <span class="brand">SafeTraveling</span>
+    </div>
+
+    <nav class="nav-menu">
+      <a href="index.html">🏠 Home</a>
+      <a href="about.html">👤 Chi sono</a>
+
+      <div class="dropdown">
+        <button class="dropbtn">🌐 Lingua ▾</button>
+        <div class="dropdown-content">
+          <a href="?lang=it">🇮🇹 Italiano</a>
+          <a href="?lang=en">🇬🇧 English</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- HERO con logo completo -->
+  <section class="hero-main">
+    <img src="assets/logo.png" class="hero-logo" alt="SafeTraveling logo">
+
+    <div class="hero-text">
+      <h1 class="hero-title">
+        Hai voglia di viaggiare ma<br>
+        <span class="accent">non sai dove andare?</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        SafeTraveling ti suggerisce <b>GRATIS</b> la destinazione perfetta in base ai tuoi desideri.<br>
+        <b>Non vendiamo pacchetti. Non prendiamo commissioni.</b> I consigli sono indipendenti.
+      </p>
+    </div>
+  </section>
+
+  <!-- FORM FILTRI -->
+  <section class="filters-container">
+    <form id="tripForm" class="filters-card">
+
+      <h2 class="filters-title">La tua ricerca intelligente</h2>
+      <p class="filters-subtitle">
+        Dimmi cosa cerchi → ti suggerisco dove andare, con logica da data analyst.
+      </p>
+
+      <div class="filters-grid">
+        <div class="field">
+          <label for="airport">Aeroporto di partenza *</label>
+          <select id="airport" required>
+            <option value="">Seleziona...</option>
+            <option value="MIL">Milano (LIN/MXP/BGY)</option>
+            <option value="ROM">Roma (FCO/CIA)</option>
+            <option value="NAP">Napoli</option>
+            <option value="VCE">Venezia</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="startDate">Data di partenza *</label>
+          <input type="date" id="startDate" required>
+        </div>
+
+        <div class="field">
+          <label for="endDate">Data di ritorno *</label>
+          <input type="date" id="endDate" required>
+        </div>
+
+        <div class="field">
+          <label for="area">Area *</label>
+          <select id="area" required>
+            <option value="europe">Europa</option>
+            <option value="world">Tutto il mondo</option>
+            <option value="sea">Mare</option>
+            <option value="city">Città</option>
+            <option value="mountain">Montagna</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="budget">Budget a persona *</label>
+          <select id="budget" required>
+            <option value="low">&lt; 300 €</option>
+            <option value="mid">300–700 €</option>
+            <option value="high">&gt; 700 €</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="duration">Durata *</label>
+          <select id="duration" required>
+            <option value="weekend">Weekend</option>
+            <option value="week">Circa 1 settimana</option>
+            <option value="long">Più di 1 settimana</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="children">Bambini (numero)</label>
+          <input type="number" id="children" value="0" min="0">
+        </div>
+      </div>
+
+      <button class="btn-primary" type="submit">
+        Mostrami dove andare →
+      </button>
+
+      <p class="free-note">
+        Servizio totalmente gratuito: SafeTraveling crescerà grazie al traffico, non ai pagamenti degli utenti.
+      </p>
+    </form>
+  </section>
+
+  <footer class="footer">
+    © SafeTraveling — Idee di viaggio basate sui dati. Sempre gratis.
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
