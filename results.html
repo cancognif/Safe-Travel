@@ -14,6 +14,10 @@
   <meta name="theme-color" content="#2A3F73">
 
   <link rel="stylesheet" href="style.css">
+
+  <!-- GOOGLE ADSENSE (attivo quando aggiungi il tuo codice) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=CA-YOUR-CODE"
+     crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -24,18 +28,19 @@
     <img src="assets/logo.png" alt="SafeTraveling logo" class="logo">
     <span class="brand">SafeTraveling</span>
   </div>
+
   <nav class="nav-menu">
     <a href="index.html">🏠 Home</a>
     <a href="about.html">👤 Chi sono</a>
 
-    <div class="dropdown">
-      <button class="dropbtn">🌐 Lingua ▾</button>
-      <div class="dropdown-content">
-        <a href="?lang=it">🇮🇹 Italiano</a>
-        <a href="?lang=en">🇬🇧 English</a>
-      </div>
+    <div class="lang-switch">
+      <a href="index.html" class="lang-cta">🇮🇹 IT</a>
+      <span class="sep">|</span>
+      <a href="index-en.html" class="lang-cta">🇺🇸 EN</a>
     </div>
   </nav>
+
+  <div class="nav-toggle" id="navToggle">☰</div>
 </header>
 
 <section class="hero">
@@ -49,15 +54,45 @@
   </p>
 </section>
 
+<!-- TOP DESTINATIONS -->
 <section class="results">
   <h2 class="section-title">🌟 Le tue 2 scelte TOP</h2>
   <div id="topCards" class="cards"></div>
 </section>
 
+<!-- ADV BLOCK ↓ Under TOP RESULTS -->
+<div class="ad-container">
+  <!-- ADV SAFE AREA 1 -->
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="CA-YOUR-CODE"
+       data-ad-slot="0000000001"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+<!-- OTHER DESTINATIONS -->
 <section class="results">
   <h2 class="section-title">🌍 Altre destinazioni adatte a te</h2>
   <div id="gridResults" class="cards"></div>
 </section>
+
+<!-- ADV BLOCK ↓ Before footer -->
+<div class="ad-container">
+  <!-- ADV SAFE AREA 2 -->
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="CA-YOUR-CODE"
+       data-ad-slot="0000000002"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
 
 <section class="hero" style="text-align:center;">
   <a href="index.html" class="btn-primary">Torna ai filtri →</a>
