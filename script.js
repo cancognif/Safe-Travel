@@ -146,3 +146,37 @@ async function generateResults() {
 
 // Avvio generazione risultati se siamo su results.html
 generateResults();
+/* =======================
+   MODIFICA FILTRI IN RESULTS
+   ======================= */
+
+const editForm = document.getElementById("editFiltersForm");
+
+if (editForm) {
+  const p = getQueryParams();
+
+  // Pre-compileremo i campi con i valori già inseriti:
+  document.getElementById("edit_airport").value = p.airport;
+  document.getElementById("edit_startDate").value = p.startDate;
+  document.getElementById("edit_endDate").value = p.endDate;
+  document.getElementById("edit_area").value = p.area;
+  document.getElementById("edit_budget").value = p.budget;
+  document.getElementById("edit_duration").value = p.duration;
+  document.getElementById("edit_children").value = p.children;
+
+  editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams({
+      airport: document.getElementById("edit_airport").value,
+      startDate: document.getElementById("edit_startDate").value,
+      endDate: document.getElementById("edit_endDate").value,
+      area: document.getElementById("edit_area").value,
+      budget: document.getElementById("edit_budget").value,
+      duration: document.getElementById("edit_duration").value,
+      children: document.getElementById("edit_children").value
+    });
+
+    window.location.href = results.html?${params.toString()};
+  });
+}
