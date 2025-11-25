@@ -24,13 +24,18 @@
     <img src="assets/logo.png" alt="SafeTraveling logo" class="logo">
     <span class="brand">SafeTraveling</span>
   </div>
-
   <nav class="nav-menu">
     <a href="index.html">🏠 Home</a>
     <a href="about.html">👤 Chi sono</a>
-    <a href="why-free.html">💙 Perché è gratis</a>
-  </nav>
 
+    <div class="dropdown">
+      <button class="dropbtn">🌐 Lingua ▾</button>
+      <div class="dropdown-content">
+        <a href="?lang=it">🇮🇹 Italiano</a>
+        <a href="?lang=en">🇬🇧 English</a>
+      </div>
+    </div>
+  </nav>
   <div class="nav-toggle" id="navToggle">☰</div>
 </header>
 
@@ -40,7 +45,7 @@
     <img src="assets/logo.png" class="hero-logo" alt="SafeTraveling logo">
     <h1 class="hero-brand-title">SafeTraveling</h1>
     <p class="hero-brand-subtitle">
-      Il primo assistente che ti suggerisce <b>mete basate sui dati reali</b>.  
+      Il primo assistente che ti suggerisce <b>mete basate sui dati reali</b>.
       Senza venderti nulla. Sempre gratis.
     </p>
   </div>
@@ -55,7 +60,6 @@
     <b>Tu scegli cosa vuoi, noi ti suggeriamo dove andare.</b>
   </p>
 
-  <!-- TWO COLUMNS -->
   <div class="two-columns">
 
     <!-- FILTRI -->
@@ -84,6 +88,19 @@
           </div>
         </div>
 
+        <!-- DATA PARTENZA + RITORNO -->
+        <div class="filters-row">
+          <div class="field">
+            <label>Data di partenza *</label>
+            <input type="date" id="startDate" required>
+          </div>
+
+          <div class="field">
+            <label>Data di ritorno *</label>
+            <input type="date" id="endDate" required>
+          </div>
+        </div>
+
         <!-- AREA + BUDGET -->
         <div class="filters-row">
           <div class="field">
@@ -109,7 +126,7 @@
           </div>
         </div>
 
-        <!-- DURATA -->
+        <!-- DURATA + BAMBINI -->
         <div class="filters-row">
           <div class="field">
             <label>Durata *</label>
@@ -148,13 +165,13 @@
         <div class="concept-box">
           <div class="icon">✨</div>
           <h3>Nessuna prenotazione</h3>
-          <p>Non vendiamo pacchetti. I suggerimenti sono 100% imparziali.</p>
+          <p>Non vendiamo pacchetti. I suggerimenti sono imparziali.</p>
         </div>
 
         <div class="concept-box">
           <div class="icon">📊</div>
           <h3>Dati reali</h3>
-          <p>Prezzi, mete, tendenze, meteo e semplicità del viaggio.</p>
+          <p>Prezzi, mete, tendenze e semplicità del viaggio.</p>
         </div>
 
         <div class="concept-box">
@@ -166,16 +183,15 @@
         <div class="concept-box">
           <div class="icon">🧭</div>
           <h3>Perfetto per indecisi</h3>
-          <p>Ti basta dire “budget” e “durata”. Noi pensiamo al resto.</p>
+          <p>Tu scegli budget e durata, noi pensiamo al resto.</p>
         </div>
       </div>
     </section>
 
-  </div> <!-- two columns -->
+  </div>
 
 </section>
 
-<!-- FOOTER -->
 <footer class="footer">
   © SafeTraveling — Idee di viaggio basate sui dati. Sempre gratis.
 </footer>
