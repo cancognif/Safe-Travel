@@ -1,56 +1,8 @@
 /* ===============================
-   SAFE TRAVEL – SCRIPT FINALE CORRETTO
+   SAFE TRAVEL – SCRIPT FINALE
    =============================== */
 
-/**
- * DATABASE INTERNO DI DESTINAZIONI
- */
-const DESTINATIONS = [
-  {
-    id: "valencia",
-    name: "Valencia",
-    country: "Spagna",
-    areaGroup: "europe",
-    tags: ["sea", "city", "weekend", "family"],
-    priceFrom: 180,
-    bestMonths: [3,4,5,9,10],
-    scoreBase: 88
-  },
-  {
-    id: "porto",
-    name: "Porto",
-    country: "Portogallo",
-    areaGroup: "europe",
-    tags: ["city", "weekend"],
-    priceFrom: 170,
-    bestMonths: [3,4,5,9,10],
-    scoreBase: 86
-  },
-  {
-    id: "faro",
-    name: "Faro",
-    country: "Portogallo",
-    areaGroup: "europe",
-    tags: ["sea", "family"],
-    priceFrom: 220,
-    bestMonths: [5,6,9,10],
-    scoreBase: 87
-  },
-  {
-    id: "atene",
-    name: "Atene",
-    country: "Grecia",
-    areaGroup: "europe",
-    tags: ["city", "culture"],
-    priceFrom: 200,
-    bestMonths: [4,5,9,10],
-    scoreBase: 90
-  }
-];
-
-/* -------------------------------
-   LETTURA FILTRI DA URL
--------------------------------- */
+// --- Lettura parametri URL ---
 function getQueryParams() {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -64,46 +16,39 @@ function getQueryParams() {
   };
 }
 
-/* -------------------------------
-   CALCOLO TRAVELSCORE
--------------------------------- */
-function computeScore(dest, filters) {
-  let score = dest.scoreBase;
+// --- Database interno ---
+const DESTINATIONS = [
+  { name: "Valencia", country: "Spagna", area: "europe", tags: ["sea","city"], priceFrom: 180, scoreBase: 88 },
+  { name: "Porto", country: "Portogallo", area: "europe", tags: ["city"], priceFrom: 170, scoreBase: 86 },
+  { name: "Faro", country: "Portogallo", area: "europe", tags: ["sea"], priceFrom: 220, scoreBase: 87 },
+  { name: "Atene", country: "Grecia", area: "europe", tags: ["city","culture"], priceFrom: 200, scoreBase: 90 }
+];
 
-  const month = new Date(filters.startDate).getMonth() + 1;
-
-  if (dest.bestMonths.includes(month)) score += 8;
-
-  if (filters.area === "sea" && dest.tags.includes("sea")) score += 8;
-  if (filters.area === "city" && dest.tags.includes("city")) score += 8;
-
-  if (filters.budget === "low" && dest.priceFrom <= 200) score += 5;
-  if (filters.budget === "high" && dest.priceFrom > 250) score += 5;
-
-  return Math.min(100, score);
+// --- Calcolo punteggio ---
+function computeScore(dest) {
+  return Math.min(100, dest.scoreBase + Math.floor(Math.random() * 10));
 }
 
-/* -------------------------------
-   FORM SUBMIT
--------------------------------- */
+// --- Gestione FORM in index.html ---
 const form = document.getElementById("tripForm");
 
 if (form) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const airport = document.getElementById("airport").value;
+    const airport   = document.getElementById("airport").value;
     const startDate = document.getElementById("startDate").value;
-    const endDate = document.getElementById("endDate").value;
-    const area = document.getElementById("area").value;
-    const budget = document.getElementById("budget").value;
-    const duration = document.getElementById("duration").value;
-    const children = document.getElementById("children").value || "0";
+    const endDate   = document.getElementById("endDate").value;
 
-    if (!airport || !startDate || !endDate || !area || !budget || !duration) {
-      alert("Compila tutti i campi obbligatori.");
+    if (!airport || !startDate || !endDate) {
+      alert("Seleziona almeno aeroporto, data di partenza e ritorno.");
       return;
     }
+
+    const area     = document.getElementById("area").value;
+    const budget   = document.getElementById("budget").value;
+    const duration = document.getElementById("duration").value;
+    const children = document.getElementById("children").value || "0";
 
     const params = new URLSearchParams({
       airport,
@@ -115,27 +60,22 @@ if (form) {
       children
     });
 
-    // CORRETTA 🔥
+    // 🚀 REDIRECT CORRETTO
     window.location.href = results.html?${params.toString()};
   });
 }
 
-/* -------------------------------
-   GENERAZIONE RISULTATI
--------------------------------- */
+// --- Generazione risultati in results.html ---
 function generateResults() {
-  const top = document.getElementById("topCards");
   const grid = document.getElementById("gridResults");
+  const top = document.getElementById("topCards");
   const status = document.getElementById("statusMessage");
 
-  if (!top || !grid) return;
+  if (!grid || !top) return;
 
-  const filters = getQueryParams();
-  const month = new Date(filters.startDate).getMonth() + 1;
-
-  let results = DESTINATIONS.map(d => ({
+  const results = DESTINATIONS.map(d => ({
     ...d,
-    score: computeScore(d, { ...filters, month })
+    score: computeScore(d)
   }));
 
   results.sort((a, b) => b.score - a.score);
