@@ -12,13 +12,13 @@
   <!-- NAVBAR -->
   <header class="nav">
     <div class="nav-left">
-      <img src="assets/logo-icon.png" class="logo-small" alt="SafeTraveling icon">
+      <img src="assets/logo-icon.png" class="logo-small" alt="SafeTravel icon">
       <span class="brand">SafeTravel</span>
     </div>
 
     <nav class="nav-menu">
       <a href="index.html">🏠 Home</a>
-      <a href="about.html">👤 Chi sono</a>
+      <a href="about.html">👤 Chi siamo</a>
 
       <div class="dropdown">
         <button class="dropbtn">🌐 Lingua ▾</button>
@@ -37,35 +37,42 @@
     <div class="hero-text">
       <h1 class="hero-title">
         Le migliori destinazioni per te<br>
-        <span class="accent">basate sui tuoi filtri</span>
+        <span class="accent">basate sui filtri che hai inserito</span>
       </h1>
 
       <p class="hero-subtitle">
-        Queste mete sono scelte combinando <b>budget, periodo, area</b> e stile di viaggio.
-        Per ora usiamo un motore dati interno, in attesa dell’aggancio alle API di voli reali.
+        Usiamo un motore dati interno per suggerirti mete realistiche con prezzi indicativi
+        e un TravelScore pensato per semplificarti la scelta.
       </p>
     </div>
   </section>
 
-  <!-- MESSAGGIO STATO -->
+  <!-- MESSAGGIO DI STATO -->
   <section class="results-status-wrapper">
     <p id="statusMessage" class="status-message">
-      Sto analizzando mete reali…
+      Sto analizzando le destinazioni in base ai tuoi filtri…
     </p>
   </section>
 
   <!-- RISULTATI TOP -->
   <section class="results">
-    <h2 class="section-title">🌟 Le tue 2 scelte TOP</h2>
+    <h2 class="section-title">🌟 Le tue 3 scelte TOP</h2>
+    <p class="results-subtitle">
+      Le mete con il TravelScore più alto rispetto a budget, periodo e area selezionati.
+    </p>
     <div id="topCards" class="cards"></div>
   </section>
 
   <!-- ALTRI RISULTATI -->
   <section class="results">
     <h2 class="section-title">🌍 Altre destinazioni adatte a te</h2>
+    <p class="results-subtitle">
+      Alternative valide se vuoi cambiare atmosfera, mantenendo filtri simili.
+    </p>
     <div id="gridResults" class="cards"></div>
   </section>
 
+  <!-- TORNA AI FILTRI -->
   <section class="results-back">
     <a href="index.html" class="btn-primary btn-back">
       Torna ai filtri →
@@ -73,7 +80,7 @@
   </section>
 
   <footer class="footer">
-    © SafeTravel — Idee di viaggio intelligenti e gratuite.
+    © SafeTravel — Idee di viaggio basate sui dati. Sempre gratis.
   </footer>
 
   <script src="script.js"></script>
