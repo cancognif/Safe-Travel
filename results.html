@@ -9,80 +9,72 @@
 
 <body>
 
-  <!-- NAVBAR -->
-  <header class="nav">
-    <div class="nav-left">
-      <img src="assets/logo-icon.png" class="logo-small" alt="SafeTravel icon">
-      <span class="brand">SafeTravel</span>
-    </div>
+<!-- NAVBAR -->
+<header class="nav">
+  <div class="nav-left">
+    <img src="assets/logo-icon.png" class="logo-small" alt="SafeTravel icon">
+    <span class="brand">SafeTravel</span>
+  </div>
 
-    <nav class="nav-menu">
-      <a href="index.html">🏠 Home</a>
-      <a href="about.html">👤 Chi siamo</a>
-
-      <div class="dropdown">
-        <button class="dropbtn">🌐 Lingua ▾</button>
-        <div class="dropdown-content">
-          <a href="?lang=it">🇮🇹 Italiano</a>
-          <a href="?lang=en">🇬🇧 English</a>
-        </div>
+  <nav class="nav-menu">
+    <a href="index.html">🏠 Home</a>
+    <a href="about.html">👤 Chi siamo</a>
+    <div class="dropdown">
+      <button class="dropbtn">🌐 Lingua ▾</button>
+      <div class="dropdown-content">
+        <a href="?lang=it">🇮🇹 Italiano</a>
+        <a href="?lang=en">🇬🇧 English</a>
       </div>
-    </nav>
-  </header>
-
-  <!-- HERO RISULTATI -->
-  <section class="hero-main hero-results">
-    <img src="assets/logo.png" class="hero-logo results-logo" alt="SafeTravel logo">
-
-    <div class="hero-text">
-      <h1 class="hero-title">
-        Le migliori destinazioni per te<br>
-        <span class="accent">basate sui filtri che hai inserito</span>
-      </h1>
-
-      <p class="hero-subtitle">
-        Usiamo un motore dati interno per suggerirti mete realistiche con prezzi indicativi
-        e un TravelScore pensato per semplificarti la scelta.
-      </p>
     </div>
-  </section>
+  </nav>
+</header>
 
-  <!-- MESSAGGIO DI STATO -->
-  <section class="results-status-wrapper">
-    <p id="statusMessage" class="status-message">
-      Sto analizzando le destinazioni in base ai tuoi filtri…
+<!-- HERO -->
+<section class="hero-main hero-results">
+  <img src="assets/logo.png" class="hero-logo results-logo" alt="SafeTravel logo">
+
+  <div class="hero-text">
+    <h1 class="hero-title">
+      Le migliori destinazioni per te<br>
+      <span class="accent">basate sui tuoi filtri</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Usiamo un motore dati interno per consigliarti mete realistiche
+      con prezzi indicativi e TravelScore.
     </p>
-  </section>
+  </div>
+</section>
 
-  <!-- RISULTATI TOP -->
-  <section class="results">
-    <h2 class="section-title">🌟 Le tue 3 scelte TOP</h2>
-    <p class="results-subtitle">
-      Le mete con il TravelScore più alto rispetto a budget, periodo e area selezionati.
-    </p>
-    <div id="topCards" class="cards"></div>
-  </section>
+<!-- MESSAGGIO DI STATO -->
+<section class="results-status-wrapper">
+  <p id="statusMessage" class="status-message">
+    Sto analizzando le destinazioni…
+  </p>
+</section>
 
-  <!-- ALTRI RISULTATI -->
-  <section class="results">
-    <h2 class="section-title">🌍 Altre destinazioni adatte a te</h2>
-    <p class="results-subtitle">
-      Alternative valide se vuoi cambiare atmosfera, mantenendo filtri simili.
-    </p>
-    <div id="gridResults" class="cards"></div>
-  </section>
+<!-- TOP RESULTS -->
+<section class="results">
+  <h2 class="section-title">🌟 Le tue 3 scelte TOP</h2>
+  <div id="topCards" class="cards"></div>
+</section>
 
-  <!-- TORNA AI FILTRI -->
-  <section class="results-back">
-    <a href="index.html" class="btn-primary btn-back">
-      Torna ai filtri →
-    </a>
-  </section>
+<!-- OTHER RESULTS -->
+<section class="results">
+  <h2 class="section-title">🌍 Altre destinazioni adatte a te</h2>
+  <div id="gridResults" class="cards"></div>
+</section>
 
-  <footer class="footer">
-    © SafeTravel — Idee di viaggio basate sui dati. Sempre gratis.
-  </footer>
+<section class="results-back">
+  <a href="index.html" class="btn-primary btn-back">
+    Torna ai filtri →
+  </a>
+</section>
 
-  <script src="script.js"></script>
+<footer class="footer">
+  © SafeTravel — Idee di viaggio basate sui dati.
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
