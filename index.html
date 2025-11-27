@@ -53,14 +53,16 @@
 
       <h2 class="filters-title">La tua ricerca intelligente</h2>
       <p class="filters-subtitle">
-        Dimmi cosa cerchi → ti suggerisco dove andare, con logica data-driven.
+        Dimmi cosa cerchi → ti suggerisco dove andare, con logica da data analyst.
       </p>
 
       <div class="filters-grid">
+        
+        <!-- AEROPORTO -->
         <div class="field">
           <label for="airport">Aeroporto di partenza *</label>
           <select id="airport" required>
-            <option value="">Seleziona...</option>
+            <option value="" disabled selected>Seleziona aeroporto…</option>
             <option value="MIL">Milano (LIN/MXP/BGY)</option>
             <option value="ROM">Roma (FCO/CIA)</option>
             <option value="NAP">Napoli</option>
@@ -68,6 +70,7 @@
           </select>
         </div>
 
+        <!-- DATE -->
         <div class="field">
           <label for="startDate">Data di partenza *</label>
           <input type="date" id="startDate" required>
@@ -78,9 +81,11 @@
           <input type="date" id="endDate" required>
         </div>
 
+        <!-- AREA -->
         <div class="field">
           <label for="area">Area *</label>
           <select id="area" required>
+            <option value="" disabled selected>Seleziona area…</option>
             <option value="europe">Europa</option>
             <option value="world">Tutto il mondo</option>
             <option value="sea">Mare</option>
@@ -89,24 +94,29 @@
           </select>
         </div>
 
+        <!-- BUDGET -->
         <div class="field">
           <label for="budget">Budget a persona *</label>
           <select id="budget" required>
+            <option value="" disabled selected>Seleziona budget…</option>
             <option value="low">&lt; 300 €</option>
             <option value="mid">300–700 €</option>
             <option value="high">&gt; 700 €</option>
           </select>
         </div>
 
+        <!-- DURATA -->
         <div class="field">
           <label for="duration">Durata *</label>
           <select id="duration" required>
+            <option value="" disabled selected>Seleziona durata…</option>
             <option value="weekend">Weekend</option>
             <option value="week">Circa 1 settimana</option>
             <option value="long">Più di 1 settimana</option>
           </select>
         </div>
 
+        <!-- BAMBINI -->
         <div class="field">
           <label for="children">Bambini (numero)</label>
           <input type="number" id="children" value="0" min="0">
@@ -117,7 +127,7 @@
         Mostrami dove andare →
       </button>
 
-    </form> <!-- 🔥 QUI chiudiamo il form correttamente -->
+    </form>
   </section>
 
   <footer class="footer">
