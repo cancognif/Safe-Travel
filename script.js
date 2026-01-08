@@ -1,105 +1,102 @@
-/* ===============================
-   SAFE TRAVEL – SCRIPT FINALE
-   =============================== */
-
-// --- Lettura parametri URL ---
-function getQueryParams() {
-  const params = new URLSearchParams(window.location.search);
-  return {
-    airport: params.get("airport"),
-    startDate: params.get("startDate"),
-    endDate: params.get("endDate"),
-    area: params.get("area"),
-    budget: params.get("budget"),
-    duration: params.get("duration"),
-    children: params.get("children")
-  };
-}
-
-// --- Database interno ---
-const DESTINATIONS = [
-  { name: "Valencia", country: "Spagna", area: "europe", tags: ["sea","city"], priceFrom: 180, scoreBase: 88 },
-  { name: "Porto", country: "Portogallo", area: "europe", tags: ["city"], priceFrom: 170, scoreBase: 86 },
-  { name: "Faro", country: "Portogallo", area: "europe", tags: ["sea"], priceFrom: 220, scoreBase: 87 },
-  { name: "Atene", country: "Grecia", area: "europe", tags: ["city","culture"], priceFrom: 200, scoreBase: 90 }
+// === DATASET METE (mock) ===
+const destinations = [
+  {
+    name: "Lisbona 🇵🇹",
+    budget: 450,
+    flightScore: 8,
+    seasonScore: 9,
+    climateScore: 8,
+    crowdScore: 7,
+    familyScore: 7,
+    valueScore: 9
+  },
+  {
+    name: "Valencia 🇪🇸",
+    budget: 400,
+    flightScore: 7,
+    seasonScore: 8,
+    climateScore: 8,
+    crowdScore: 8,
+    familyScore: 8,
+    valueScore: 8
+  },
+  {
+    name: "Atene 🇬🇷",
+    budget: 520,
+    flightScore: 7,
+    seasonScore: 7,
+    climateScore: 7,
+    crowdScore: 6,
+    familyScore: 6,
+    valueScore: 7
+  }
 ];
 
-// --- Calcolo punteggio ---
-function computeScore(dest) {
-  return Math.min(100, dest.scoreBase + Math.floor(Math.random() * 10));
+// === PESI ===
+const WEIGHTS = {
+  budget: 0.25,
+  flight: 0.15,
+  season: 0.15,
+  value: 0.15,
+  climate: 0.10,
+  crowd: 0.10,
+  family: 0.10
+};
+
+// === CALCOLO RATING ===
+function calculateRating(dest, userBudget, children) {
+
+  let budgetScore = dest.budget <= userBudget ? 9 : 5;
+  let familyScore = children > 0 ? dest.familyScore : 10 - dest.familyScore;
+
+  const rating =
+    budgetScore * WEIGHTS.budget +
+    dest.flightScore * WEIGHTS.flight +
+    dest.seasonScore * WEIGHTS.season +
+    dest.valueScore * WEIGHTS.value +
+    dest.climateScore * WEIGHTS.climate +
+    dest.crowdScore * WEIGHTS.crowd +
+    familyScore * WEIGHTS.family;
+
+  return Math.round(rating * 10) / 10;
 }
 
-// --- Gestione FORM in index.html ---
+// === STELLE ===
+function getStars(rating) {
+  return "★".repeat(Math.floor(rating)) + "☆".repeat(10 - Math.floor(rating));
+}
+
+// === FORM SUBMIT ===
 const form = document.getElementById("tripForm");
 
 if (form) {
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", e => {
     e.preventDefault();
 
-    const airport   = document.getElementById("airport").value;
-    const startDate = document.getElementById("startDate").value;
-    const endDate   = document.getElementById("endDate").value;
+    const budgetValue = document.getElementById("budget").value;
+    const children = parseInt(document.getElementById("children").value, 10);
 
-    if (!airport || !startDate || !endDate) {
-      alert("Seleziona almeno aeroporto, data di partenza e ritorno.");
-      return;
-    }
+    let userBudget = budgetValue === "low" ? 300 :
+                     budgetValue === "mid" ? 600 : 1000;
 
-    const area     = document.getElementById("area").value;
-    const budget   = document.getElementById("budget").value;
-    const duration = document.getElementById("duration").value;
-    const children = document.getElementById("children").value || "0";
+    const ranked = destinations
+      .map(d => ({
+        ...d,
+        rating: calculateRating(d, userBudget, children)
+      }))
+      .sort((a, b) => b.rating - a.rating);
 
-    const params = new URLSearchParams({
-      airport,
-      startDate,
-      endDate,
-      area,
-      budget,
-      duration,
-      children
-    });
-
-    // 🚀 REDIRECT CORRETTO
-    window.location.href = results.html?${params.toString()};
+    localStorage.setItem("bestDestination", JSON.stringify(ranked[0]));
+    window.location.href = "results.html";
   });
 }
 
-// --- Generazione risultati in results.html ---
-function generateResults() {
-  const grid = document.getElementById("gridResults");
-  const top = document.getElementById("topCards");
-  const status = document.getElementById("statusMessage");
+// === RISULTATI ===
+const result = localStorage.getItem("bestDestination");
 
-  if (!grid || !top) return;
-
-  const results = DESTINATIONS.map(d => ({
-    ...d,
-    score: computeScore(d)
-  }));
-
-  results.sort((a, b) => b.score - a.score);
-
-  const top3 = results.slice(0, 3);
-  const others = results.slice(3);
-
-  top.innerHTML = top3.map(d => `
-    <div class="card">
-      <h3 class="card-title">${d.name}, ${d.country}</h3>
-      <span class="card-score">⭐ ${d.score}/100</span>
-      <p class="card-meta">Da €${d.priceFrom}</p>
-    </div>
-  `).join("");
-
-  grid.innerHTML = others.map(d => `
-    <div class="card">
-      <h3 class="card-title">${d.name}, ${d.country}</h3>
-      <span class="card-score">⭐ ${d.score}/100</span>
-      <p class="card-meta">Da €${d.priceFrom}</p>
-    </div>
-  `).join("");
-
-  status.textContent = "Ecco le mete perfette per i tuoi filtri!";
+if (result) {
+  const dest = JSON.parse(result);
+  document.querySelector(".destination-name").innerText = dest.name;
+  document.querySelector(".score-number").innerText = dest.rating;
+  document.querySelector(".rating-stars").innerText = getStars(dest.rating);
 }
-
-generateResults();
