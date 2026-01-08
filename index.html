@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>SafeTravel – Calcola il rating delle mete</title>
+  <title>SafeTravel – Scopri il rating migliore per te</title>
 
   <meta name="description"
-        content="SafeTravel calcola il rating delle destinazioni in base a budget, date e preferenze. Non vendiamo viaggi: analizziamo dati per dirti quale meta ha il punteggio migliore per te.">
+        content="SafeTravel calcola il rating delle mete in base a budget, date e preferenze. Non vendiamo viaggi: analizziamo i dati per mostrarti la meta con il punteggio migliore per te.">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -61,7 +61,7 @@
     <h2 class="filters-title">Calcola il SafeTravel Rating™</h2>
     <p class="filters-subtitle">
       Inserisci le tue preferenze.<br>
-      Useremo queste informazioni per calcolare il rating delle mete.
+      Useremo questi dati per calcolare il rating delle mete.
     </p>
 
     <div class="filters-grid">
@@ -111,4 +111,49 @@
           <option value="mid">300 – 700 €</option>
           <option value="high">&gt; 700 €</option>
         </select>
-      </
+      </div>
+
+      <!-- DURATA -->
+      <div class="field">
+        <label for="duration">Durata *</label>
+        <select id="duration" required>
+          <option value="" disabled selected>Seleziona…</option>
+          <option value="weekend">Weekend</option>
+          <option value="week">Circa 1 settimana</option>
+          <option value="long">Più di 1 settimana</option>
+        </select>
+      </div>
+
+      <!-- BAMBINI -->
+      <div class="field">
+        <label for="children">Bambini</label>
+        <input type="number" id="children" min="0" value="0">
+        <small class="hint">Serve per valutare mete family-friendly</small>
+      </div>
+
+    </div>
+
+    <!-- 🔴 CTA CHIARISSIMA -->
+    <button class="btn-primary" type="submit">
+      Vedi il rating migliore per te →
+    </button>
+
+    <p class="after-submit-hint">
+      Ti mostreremo la meta con il SafeTravel Rating™ più alto in base ai tuoi dati.
+    </p>
+
+    <p class="trust-note">
+      Nessuna registrazione. Nessuna vendita. Solo dati e ispirazione.
+    </p>
+
+  </form>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  © SafeTravel — Il rating delle mete basato sui dati. Sempre gratis.
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
