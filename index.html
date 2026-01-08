@@ -3,137 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SafeTravel – Trova la meta perfetta</title>
+  <title>SafeTravel – Calcola il rating delle mete</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
-  <header class="nav">
-    <div class="nav-left">
-      <img src="assets/logo-icon.png" class="logo-small" alt="SafeTravel icon">
-      <span class="brand">SafeTravel</span>
-    </div>
+<header class="nav">
+  <div class="nav-left">
+    <span class="brand">SafeTravel</span>
+  </div>
+</header>
 
-    <nav class="nav-menu">
-      <a href="index.html">🏠 Home</a>
-      <a href="about.html">👤 Chi siamo</a>
+<section class="hero-main">
+  <h1>Scopri la meta con il rating migliore per te</h1>
+  <p>Inserisci i tuoi dati. Noi calcoliamo il punteggio.</p>
+</section>
 
-      <div class="dropdown">
-        <button class="dropbtn">🌐 Lingua ▾</button>
-        <div class="dropdown-content">
-          <a href="?lang=it">🇮🇹 Italiano</a>
-          <a href="?lang=en">🇬🇧 English</a>
-        </div>
-      </div>
-    </nav>
-  </header>
+<section class="filters-container">
+  <form id="tripForm">
 
-  <!-- HERO con logo completo -->
-  <section class="hero-main">
-    <img src="assets/logo.png" class="hero-logo" alt="SafeTravel logo">
+    <label>Budget</label>
+    <select id="budget" required>
+      <option value="low">&lt; 300 €</option>
+      <option value="mid">300 – 700 €</option>
+      <option value="high">&gt; 700 €</option>
+    </select>
 
-    <div class="hero-text">
-      <h1 class="hero-title">
-        Hai voglia di viaggiare ma<br>
-        <span class="accent">non sai dove andare?</span>
-      </h1>
+    <label>Bambini</label>
+    <input type="number" id="children" value="0" min="0">
 
-      <p class="hero-subtitle">
-        SafeTravel ti suggerisce GRATIS la destinazione perfetta in base ai tuoi desideri.<br>
-        <b>Non vendiamo viaggi, ma idee che fanno brillare gli occhi.</b>
-      </p>
-    </div>
-  </section>
+    <button type="submit">
+      Calcola il rating →
+    </button>
 
-  <!-- FORM FILTRI -->
-  <section class="filters-container">
-    <form id="tripForm" class="filters-card">
+  </form>
+</section>
 
-      <h2 class="filters-title">La tua ricerca intelligente</h2>
-      <p class="filters-subtitle">
-        Dimmi cosa cerchi → ti suggerisco dove andare, con logica da data analyst.
-      </p>
-
-      <div class="filters-grid">
-        
-        <!-- AEROPORTO -->
-        <div class="field">
-          <label for="airport">Aeroporto di partenza *</label>
-          <select id="airport" required>
-            <option value="" disabled selected>Seleziona aeroporto…</option>
-            <option value="MIL">Milano (LIN/MXP/BGY)</option>
-            <option value="ROM">Roma (FCO/CIA)</option>
-            <option value="NAP">Napoli</option>
-            <option value="VCE">Venezia</option>
-          </select>
-        </div>
-
-        <!-- DATE -->
-        <div class="field">
-          <label for="startDate">Data di partenza *</label>
-          <input type="date" id="startDate" required>
-        </div>
-
-        <div class="field">
-          <label for="endDate">Data di ritorno *</label>
-          <input type="date" id="endDate" required>
-        </div>
-
-        <!-- AREA -->
-        <div class="field">
-          <label for="area">Area *</label>
-          <select id="area" required>
-            <option value="" disabled selected>Seleziona area…</option>
-            <option value="europe">Europa</option>
-            <option value="world">Tutto il mondo</option>
-            <option value="sea">Mare</option>
-            <option value="city">Città</option>
-            <option value="mountain">Montagna</option>
-          </select>
-        </div>
-
-        <!-- BUDGET -->
-        <div class="field">
-          <label for="budget">Budget a persona *</label>
-          <select id="budget" required>
-            <option value="" disabled selected>Seleziona budget…</option>
-            <option value="low">&lt; 300 €</option>
-            <option value="mid">300–700 €</option>
-            <option value="high">&gt; 700 €</option>
-          </select>
-        </div>
-
-        <!-- DURATA -->
-        <div class="field">
-          <label for="duration">Durata *</label>
-          <select id="duration" required>
-            <option value="" disabled selected>Seleziona durata…</option>
-            <option value="weekend">Weekend</option>
-            <option value="week">Circa 1 settimana</option>
-            <option value="long">Più di 1 settimana</option>
-          </select>
-        </div>
-
-        <!-- BAMBINI -->
-        <div class="field">
-          <label for="children">Bambini (numero)</label>
-          <input type="number" id="children" value="0" min="0">
-        </div>
-      </div>
-
-      <button class="btn-primary" type="submit">
-        Mostrami dove andare →
-      </button>
-
-    </form>
-  </section>
-
-  <footer class="footer">
-    ©️ SafeTravel — Idee di viaggio basate sui dati. Sempre gratis.
-  </footer>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
