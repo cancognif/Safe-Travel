@@ -3,43 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>SafeTravel – Calcola il rating delle mete</title>
+
+  <meta name="description"
+        content="SafeTravel calcola il rating delle destinazioni in base a budget, date e preferenze. Non vendiamo viaggi: analizziamo dati per dirti quale meta ha il punteggio migliore per te.">
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<!-- ================= NAVBAR ================= -->
 <header class="nav">
   <div class="nav-left">
+    <img src="assets/logo-icon.png" class="logo-small" alt="SafeTravel icon">
     <span class="brand">SafeTravel</span>
   </div>
+
+  <nav class="nav-menu">
+    <a href="index.html">🏠 Home</a>
+    <a href="about.html">👤 Chi siamo</a>
+    <a href="why-free.html">💡 Perché è gratis</a>
+
+    <div class="dropdown">
+      <button class="dropbtn">🌐 Lingua ▾</button>
+      <div class="dropdown-content">
+        <a href="?lang=it">🇮🇹 Italiano</a>
+        <a href="?lang=en">🇬🇧 English</a>
+      </div>
+    </div>
+  </nav>
 </header>
 
+<!-- ================= HERO ================= -->
 <section class="hero-main">
-  <h1>Scopri la meta con il rating migliore per te</h1>
-  <p>Inserisci i tuoi dati. Noi calcoliamo il punteggio.</p>
+  <img src="assets/logo.png" class="hero-logo" alt="SafeTravel logo">
+
+  <div class="hero-text">
+    <h1 class="hero-title">
+      Quale meta ha il<br>
+      <span class="accent">rating migliore per te?</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      SafeTravel analizza budget, date e contesto<br>
+      e assegna un <b>punteggio oggettivo alle destinazioni</b>.<br>
+      <b>Non vendiamo viaggi.</b> Usiamo i dati per aiutarti a scegliere.
+    </p>
+  </div>
 </section>
 
+<!-- ================= FORM ================= -->
 <section class="filters-container">
-  <form id="tripForm">
+  <form id="tripForm" class="filters-card">
 
-    <label>Budget</label>
-    <select id="budget" required>
-      <option value="low">&lt; 300 €</option>
-      <option value="mid">300 – 700 €</option>
-      <option value="high">&gt; 700 €</option>
-    </select>
+    <h2 class="filters-title">Calcola il SafeTravel Rating™</h2>
+    <p class="filters-subtitle">
+      Inserisci le tue preferenze.<br>
+      Useremo queste informazioni per calcolare il rating delle mete.
+    </p>
 
-    <label>Bambini</label>
-    <input type="number" id="children" value="0" min="0">
+    <div class="filters-grid">
 
-    <button type="submit">
-      Calcola il rating →
-    </button>
+      <!-- AEROPORTO -->
+      <div class="field">
+        <label for="airport">Aeroporto di partenza *</label>
+        <select id="airport" required>
+          <option value="" disabled selected>Seleziona aeroporto…</option>
+          <option value="MIL">Milano (LIN / MXP / BGY)</option>
+          <option value="ROM">Roma (FCO / CIA)</option>
+          <option value="NAP">Napoli</option>
+          <option value="VCE">Venezia</option>
+        </select>
+      </div>
 
-  </form>
-</section>
+      <!-- DATE -->
+      <div class="field">
+        <label for="startDate">Data di partenza *</label>
+        <input type="date" id="startDate" required>
+      </div>
 
-<script src="script.js"></script>
-</body>
-</html>
+      <div class="field">
+        <label for="endDate">Data di ritorno *</label>
+        <input type="date" id="endDate" required>
+      </div>
+
+      <!-- TIPO -->
+      <div class="field">
+        <label for="area">Tipo di viaggio *</label>
+        <select id="area" required>
+          <option value="" disabled selected>Seleziona…</option>
+          <option value="city">Città</option>
+          <option value="sea">Mare</option>
+          <option value="mountain">Montagna</option>
+          <option value="europe">Europa</option>
+          <option value="world">Lontano</option>
+        </select>
+      </div>
+
+      <!-- BUDGET -->
+      <div class="field">
+        <label for="budget">Budget a persona *</label>
+        <select id="budget" required>
+          <option value="" disabled selected>Seleziona…</option>
+          <option value="low">&lt; 300 €</option>
+          <option value="mid">300 – 700 €</option>
+          <option value="high">&gt; 700 €</option>
+        </select>
+      </
